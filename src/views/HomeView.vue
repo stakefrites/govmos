@@ -14,9 +14,19 @@
             <v-col>Proposals: {{ proposals(network.name).length }}</v-col>
           </v-row>
         </v-card-text>
+        <v-progress-circular
+          v-else
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
         <v-card-actions v-if="proposalsLoaded">
           <v-btn :to="`/proposals/${network.name}`">View Proposals</v-btn>
         </v-card-actions>
+        <v-progress-circular
+          v-else
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
       </v-card>
     </v-col>
   </v-row>

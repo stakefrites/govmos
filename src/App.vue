@@ -4,7 +4,7 @@
       <div class="d-flex align-center">
         <v-app-bar-title class="text">
           <router-link to="/">
-            <div class="text-h4">Stake Frites</div></router-link
+            <div class="text-h4">Govmos</div></router-link
           ></v-app-bar-title
         >
       </div>
