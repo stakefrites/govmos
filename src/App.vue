@@ -2,7 +2,11 @@
   <v-app>
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
-        <v-app-bar-title class="text"> <h2>Stake Frites</h2></v-app-bar-title>
+        <v-app-bar-title class="text">
+          <router-link to="/">
+            <div class="text-h4">Stake Frites</div></router-link
+          ></v-app-bar-title
+        >
       </div>
 
       <v-spacer></v-spacer>

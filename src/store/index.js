@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import Network from "../utils/Network";
 import CosmosDirectory from "../utils/CosmosDirectory";
+
 import _ from "lodash";
 
 const mapAsync = (array, fn) => {
@@ -30,7 +31,6 @@ const fetchNetworks = async ({ commit, state }) => {
     const props = await network.queryClient.tmClient.gov.proposals(0, "", "");
     return { name: network.name, proposals: props.proposals };
   });
-  console.log(proposals);
   commit("setProposals", proposals);
   commit("setIsProposalsLoaded", true);
 };
@@ -41,7 +41,7 @@ export default createStore({
       { name: "akash" },
       { name: "chihuahua" },
       { name: "cerberus" },
-      { name: "cosmoshub" },
+      //{ name: "cosmoshub" },
     ],
     proposals: {},
     isNetworksLoaded: false,
