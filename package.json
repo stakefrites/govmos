@@ -30,6 +30,7 @@
     "@vuetify/vite-plugin": "^1.0.0-alpha.0",
     "sass": "^1.38.0",
     "sass-loader": "^10.0.0",
+    "ts-proto": "^1.110.4",
     "vite": "^2.9.0",
     "vue-cli-plugin-vuetify": "~2.4.8",
     "vuetify-loader": "^2.0.0-alpha.0"

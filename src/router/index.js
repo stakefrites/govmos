@@ -3,6 +3,7 @@ const routes = [
   {
     path: "/",
     name: "home",
+    //component: () => import("../views/SelectChainsView.vue"),
     component: () => import("../views/HomeView.vue"),
   },
   {

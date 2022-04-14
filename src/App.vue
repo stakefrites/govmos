@@ -10,6 +10,10 @@
       </div>
 
       <v-spacer></v-spacer>
+      <v-app-bar-title>
+        <v-chip v-if="keplr" @click="disconnectKeplr()">{{ address }}</v-chip>
+        <v-chip @click="connectKeplr()" v-else>Connect Wallet</v-chip>
+      </v-app-bar-title>
     </v-app-bar>
     <v-container>
       <v-main>
@@ -39,6 +43,7 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "App",
@@ -48,6 +53,18 @@ export default {
   },
   async created() {
     await this.$store.dispatch("fetchNetworks");
+    await this.$store.dispatch("fetchAddress");
+  },
+  computed: {
+    ...mapGetters({ address: "getAddress", keplr: "getKeplr" }),
+  },
+  methods: {
+    async connectKeplr() {
+      await this.$store.dispatch("connectKeplr");
+    },
+    async disconnectKeplr() {
+      await this.$store.dispatch("disconnectKeplr");
+    },
   },
 
   data: () => ({

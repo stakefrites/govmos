@@ -3,11 +3,11 @@ version: "2.0"
 
 services:
   node:
-    image: ghcr.io/stakefrites/website:v0.0.5
+    image: ghcr.io/stakefrites/govmos:v0.0.2
     expose:
       - port: 80
         accept:
-          - stakefrites.co
+          - govmos.stakefrites.co
         to:
           - global: true
 
@@ -18,7 +18,7 @@ profiles:
         cpu:
           units: 1
         memory:
-          size: 512Mi
+          size: 256Mi
         storage:
           size: 100Mi
   placement:

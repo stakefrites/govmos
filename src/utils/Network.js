@@ -21,7 +21,7 @@ const Network = async (data, withoutQueryClient) => {
     if (!queryClient) return;
 
     const gasPrice = data.gasPrice || "0.0025" + chain.denom;
-    const client = SIGNERS[data.name] || SigningClient;
+    const client = SigningClient;
     return client(queryClient.rpcUrl, gasPrice, wallet, key);
   };
 

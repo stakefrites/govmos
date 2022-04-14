@@ -20,15 +20,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ proposals: "getProposalsByName" }),
+    ...mapGetters({
+      proposals: "getProposalsByName",
+      chainId: "getChainIdByName",
+    }),
   },
   methods: {},
   async created() {
     this.network = this.$route.params.network;
+    await this.$store.dispatch("changeChainId", this.chainId(this.network));
     this.$watch(
       () => this.$route.params,
       async (toParams) => {
         this.network = toParams.network;
+        await this.$store.dispatch("changeChainId", this.chainId(this.network));
       }
     );
   },
