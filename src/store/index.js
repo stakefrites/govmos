@@ -36,13 +36,11 @@ const fetchNetworks = async ({ commit, state }) => {
     return await Network(network);
   });
   commit("setNetworks", fullNetworks);
-  console.log(fullNetworks);
   commit("setIsNetworksLoaded", true);
   const proposals = await mapAsync(fullNetworks, async (network) => {
     const props = await network.queryClient.tmClient.gov.proposals(0, "", "");
     return { name: network.name, proposals: props.proposals };
   });
-  console.log(proposals);
   commit("setProposals", proposals);
   commit("setIsProposalsLoaded", true);
 };
@@ -66,6 +64,10 @@ export default createStore({
       address: false,
       keplr: false,
       signingClient: false,
+      vote: {
+        proposalId: "",
+        option: 0,
+      },
     },
   },
   getters: {
@@ -150,7 +152,7 @@ export default createStore({
     },
     async changeChainId({ commit, state }, chainId) {
       const networks = _.keyBy(state.networks, "chainId");
-      console.log("networks", networks, state.networks);
+
       if (chainId) {
         commit("setChainId", chainId);
         await window.keplr.enable(chainId);
@@ -159,34 +161,44 @@ export default createStore({
         const { bech32Address } = key;
         commit("setAddress", bech32Address);
         const offlineSigner = await window.keplr.getOfflineSignerAuto(chainId);
-        const signingClient = await networks[chainId].signingClient(
-          key,
-          offlineSigner
+        const stargateClient = await networks[chainId].signingClient(
+          offlineSigner,
+          key
         );
-        console.log("signingClient", signingClient);
-        commit("setSigningClient", signingClient);
+        commit("setSigningClient", stargateClient);
       }
     },
     async castVote({ commit, state }, vote) {
+      console.log("vote param", vote);
+      //const vote = state.wallet.vote;
       const msg = {
         typeUrl: "/cosmos.gov.v1beta1.MsgVote",
         value: {
-          proposalId: vote.id,
+          proposalId: vote.proposalId.toNumber(),
           voter: state.wallet.address,
           option: vote.option,
         },
       };
 
       let gas;
-      console.log("gas, client", gas, state.wallet.signingClient);
+      console.log("MSG", msg);
+      const client = state.wallet.signingClient;
+      const address = state.wallet.address;
       try {
-        gas = await state.wallet.signingClient.simulate(state.wallet.address, [
-          msg,
-        ]);
+        gas = await client.simulate(address, [msg]);
       } catch (error) {
         console.log(error);
         return;
       }
+      client.signAndBroadcast(address, [msg], gas).then(
+        (result) => {
+          console.log("Successfully broadcasted:", result);
+          this.setState({ loading: false, error: null });
+        },
+        (error) => {
+          console.log("Failed to broadcast:", error);
+        }
+      );
       console.log(gas);
     },
   },

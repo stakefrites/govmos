@@ -73,18 +73,14 @@
               <v-card-text> Cast your vote </v-card-text>
               <v-card-text>
                 <v-radio-group v-model="vote" mandatory>
-                  <v-radio label="Yes" value="yes" v-model="vote"></v-radio>
-                  <v-radio label="No" value="no" v-model="vote"></v-radio>
+                  <v-radio label="Yes" :value="1" v-model="vote"></v-radio>
+                  <v-radio label="No" :value="2" v-model="vote"></v-radio>
                   <v-radio
                     label="No With Veto"
-                    value="noWithVeto"
+                    :value="3"
                     v-model="vote"
                   ></v-radio>
-                  <v-radio
-                    label="Abstain"
-                    value="abstain"
-                    v-model="vote"
-                  ></v-radio>
+                  <v-radio label="Abstain" :value="4" v-model="vote"></v-radio>
                 </v-radio-group>
               </v-card-text>
 
@@ -180,7 +176,7 @@ export default {
   data() {
     return {
       dialog: false,
-      vote: "",
+      vote: 0,
       expand: false,
     };
   },
@@ -190,7 +186,7 @@ export default {
   methods: {
     closeDialog() {
       this.dialog = false;
-      this.vote = "";
+      this.vote = 0;
     },
     async castVote() {
       const params = {

@@ -7,14 +7,14 @@ import {
 } from "@cosmjs/stargate";
 
 async function SigningClient(rpcUrl, defaultGasPrice, signer, key, signerOpts) {
+  console.log("init client - signer", signer);
   const client =
     rpcUrl &&
     (await SigningStargateClient.connectWithSigner(rpcUrl, signer, signerOpts));
-  console.log("signing client created", client);
 
-  async function getAddress() {
-    const accounts = await signer.getAccounts();
-    return accounts[0].address;
+  function getAddress() {
+    const accounts = signer.bech32Address;
+    return accounts;
   }
 
   function getIsNanoLedger() {
@@ -71,7 +71,7 @@ async function SigningClient(rpcUrl, defaultGasPrice, signer, key, signerOpts) {
 
   async function simulate(address, msgs, memo, modifier) {
     console.log(address, msgs, client, signer);
-    const estimate = await client.simulate(address, msgs, memo);
+    const estimate = await client.simulate(address, msgs, "allo");
     return parseInt(estimate * (modifier || 1.5));
   }
 
