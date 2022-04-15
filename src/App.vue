@@ -1,18 +1,22 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
+    <v-app-bar flat color="primary" dark>
+      <template v-slot:prepend>
         <Logo />
-        <v-app-bar-title class="text">
-          <div class="text-h4">Govmos</div>
-        </v-app-bar-title>
-      </div>
+      </template>
 
-      <v-spacer></v-spacer>
       <v-app-bar-title>
-        <v-chip v-if="keplr" @click="disconnectKeplr()">{{ address }}</v-chip>
-        <v-chip @click="connectKeplr()" v-else>Connect Wallet</v-chip>
+        <div class="h4">
+          <b>Govmos</b>
+        </div>
       </v-app-bar-title>
+
+      <template v-slot:append>
+        <v-app-bar-title>
+          <v-chip v-if="keplr" @click="disconnectKeplr()">{{ address }}</v-chip>
+          <v-chip @click="connectKeplr()" v-else>Connect Wallet</v-chip>
+        </v-app-bar-title>
+      </template>
     </v-app-bar>
     <v-container>
       <v-main>
