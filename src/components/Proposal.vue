@@ -1,6 +1,6 @@
 <template>
   <v-col md="12" sm="12" xs="12" lg="6" xl="6">
-    <v-card height="500">
+    <v-card variant="outlined">
       <v-card-header>
         <v-chip small class="mr-3">{{ proposal.proposalId }}</v-chip>
       </v-card-header>
@@ -11,7 +11,18 @@
         }}</v-chip></v-card-title
       >
       <v-card-subtitle>{{ type }}</v-card-subtitle>
-      <v-card-text>
+      <v-card-text class="py-0">
+        <v-row v-if="!expand">
+          <v-col xs="12" sm="6" md="6">
+            <v-card-text>{{ description }}</v-card-text>
+          </v-col>
+
+          <v-col v-if="isDone" xs="12" sm="6" md="6">
+            <BarChart :results="proposal.finalTallyResult" />
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <!-- <v-card-text>
         <v-list-item-title class="text-h5 my-5"> Results </v-list-item-title>
         <v-row>
           <v-col>
@@ -41,11 +52,21 @@
             </v-chip>
           </v-col>
         </v-row>
-      </v-card-text>
-
-      <v-card-text>{{ description }}</v-card-text>
+      </v-card-text> -->
+      <v-expand-transition>
+        <div v-if="expand">
+          <v-list>
+            <v-list-item>
+              {{ fullDescription }}
+            </v-list-item>
+            <v-list-item v-if="isDone">
+              <BarChart :results="proposal.finalTallyResult" />
+            </v-list-item>
+          </v-list>
+        </div>
+      </v-expand-transition>
       <v-card-actions>
-        <v-btn variant="contained-text" color="primary"
+        <v-btn v-if="statusRaw == 2" variant="contained-text" color="primary"
           >Vote
           <v-dialog v-model="dialog" activator="parent">
             <v-card>
@@ -81,7 +102,7 @@
             </v-card>
           </v-dialog></v-btn
         >
-        <v-btn>See More</v-btn>
+        <v-btn @click="expand = !expand">{{ expansionText }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-col>
@@ -90,6 +111,7 @@
 <script>
 import { mapGetters } from "vuex";
 import Coin from "@/components/Coin.vue";
+import BarChart from "@/components/BarChart.vue";
 import { Proposal, TextProposal } from "cosmjs-types/cosmos/gov/v1beta1/gov";
 import { Registry } from "@cosmjs/proto-signing";
 import { ClientUpdateProposal } from "cosmjs-types/ibc/core/client/v1/client";
@@ -154,11 +176,12 @@ const excerpt = (string) => {
 };
 export default {
   name: "Proposal",
-  components: { Coin },
+  components: { Coin, BarChart },
   data() {
     return {
       dialog: false,
       vote: "",
+      expand: false,
     };
   },
   props: {
@@ -169,15 +192,17 @@ export default {
       this.dialog = false;
       this.vote = "";
     },
-    castVote() {
-      this.$store.dispatch("castVote", {
-        proposalId: this.proposal.proposalId,
+    async castVote() {
+      const params = {
+        proposalId: this.$props.proposal.proposalId,
         option: this.vote,
         voter: this.$store.state.wallet.address,
-      });
+      };
+      console.log(params);
+      await this.$store.dispatch("castVote", params);
+      this.dialog = false;
+      this.vote = "";
     },
-  },
-  methods: {
     ...mapGetters({
       signingClient: "getSigningClient",
     }),
@@ -185,6 +210,17 @@ export default {
   computed: {
     status() {
       return proposalStatus(this.$props.proposal.status);
+    },
+    expansionText() {
+      return this.expand ? "Hide" : "See More";
+    },
+    isDone() {
+      return (
+        this.$props.proposal.status != 1 && this.$props.proposal.status != 2
+      );
+    },
+    statusRaw() {
+      return this.$props.proposal.status;
     },
     registry() {
       const registry = new Registry(defaultStargateTypes);
@@ -209,6 +245,9 @@ export default {
     },
     description() {
       return excerpt(this.content.description);
+    },
+    fullDescription() {
+      return this.content.description;
     },
     content() {
       return this.registry.decode(this.$props.proposal.content);

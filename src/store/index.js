@@ -53,8 +53,9 @@ export default createStore({
       { name: "akash" },
       { name: "chihuahua" },
       { name: "cerberus" },
+
       //{ name: "osmosis" },
-      //{ name: "cosmoshub" },
+      { name: "cosmoshub" },
       //{ name: "lumnetwork" },
       { name: "juno" },
     ],
@@ -70,6 +71,12 @@ export default createStore({
   getters: {
     getNetworks(state) {
       return state.networks;
+    },
+    getNetworkByName: (state) => (name) => {
+      const networks = _.keyBy(state.networks, "name");
+      if (networks[name]) {
+        return networks[name];
+      }
     },
     getAddress(state) {
       return state.wallet.address;
@@ -161,17 +168,21 @@ export default createStore({
       }
     },
     async castVote({ commit, state }, vote) {
-      const msg = MsgVote.fromPartial({
-        proposalId: vote.id,
-        voter: state.wallet.wallet,
-        option: vote.option,
-      });
+      const msg = {
+        typeUrl: "/cosmos.gov.v1beta1.MsgVote",
+        value: {
+          proposalId: vote.id,
+          voter: state.wallet.address,
+          option: vote.option,
+        },
+      };
+
       let gas;
+      console.log("gas, client", gas, state.wallet.signingClient);
       try {
-        gas = await state.wallet.signingClient.simulate(
-          state.wallet.address,
-          msg
-        );
+        gas = await state.wallet.signingClient.simulate(state.wallet.address, [
+          msg,
+        ]);
       } catch (error) {
         console.log(error);
         return;

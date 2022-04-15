@@ -2,11 +2,10 @@
   <v-app>
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
+        <Logo />
         <v-app-bar-title class="text">
-          <router-link to="/">
-            <div class="text-h4">Govmos</div></router-link
-          ></v-app-bar-title
-        >
+          <div class="text-h4">Govmos</div>
+        </v-app-bar-title>
       </div>
 
       <v-spacer></v-spacer>
@@ -42,21 +41,25 @@
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import Logo from "@/components/Logo.vue";
 import { mapGetters } from "vuex";
 
 export default {
   name: "App",
 
   components: {
-    HelloWorld,
+    Logo,
   },
   async created() {
     await this.$store.dispatch("fetchNetworks");
     await this.$store.dispatch("fetchAddress");
   },
   computed: {
-    ...mapGetters({ address: "getAddress", keplr: "getKeplr" }),
+    ...mapGetters({
+      address: "getAddress",
+      keplr: "getKeplr",
+      network: "getNetworkByName",
+    }),
   },
   methods: {
     async connectKeplr() {
@@ -72,3 +75,12 @@ export default {
   }),
 };
 </script>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Fredoka&family=Titillium+Web:wght@200;700&display=swap");
+
+body {
+  color: white;
+  font-family: "Titillium Web", sans-serif;
+}
+</style>
