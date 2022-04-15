@@ -1,34 +1,57 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-btn variant="text" to="/">
-        <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
-        Back
-      </v-btn>
-    </v-col>
-  </v-row>
-  <v-row v-if="proposalsLoaded" align="center" justify="center">
-    <Proposal
-      v-for="proposal in proposals(network)"
-      :key="proposal.id"
-      :proposal="proposal"
-    />
-  </v-row>
-  <v-row v-else>
-    <v-progress-linear indeterminate color="primary" class="mt-5">
-    </v-progress-linear
-  ></v-row>
+  <v-card variant="outlined">
+    <v-row v-if="proposalsLoaded" align="center" justify="center">
+      <v-col>
+        <v-list three-line>
+          <v-btn variant="text" to="/">
+            <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
+            Back
+          </v-btn>
+          <v-list-subheader>
+            <div class="text-h4 my-5">Active</div>
+          </v-list-subheader>
+          <ProposalList
+            v-for="proposal in activeProposals"
+            :key="proposal.id"
+            :proposal="proposal"
+          />
+          <v-list-item v-if="activeProposals.length == 0"
+            >No proposals are active for the time being.</v-list-item
+          >
+        </v-list>
+      </v-col>
+    </v-row>
+    <v-row v-if="proposalsLoaded" align="center" justify="center">
+      <v-col>
+        <v-list three-line>
+          <v-list-subheader>
+            <div class="text-h4 my-5">Archive</div>
+          </v-list-subheader>
+          <ProposalList
+            v-for="proposal in proposals(network)"
+            :key="proposal.id"
+            :proposal="proposal"
+          />
+        </v-list>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-progress-linear indeterminate color="primary" class="mt-5">
+      </v-progress-linear
+    ></v-row>
+  </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import Proposal from "@/components/Proposal.vue";
+import ProposalList from "@/components/ProposalList.vue";
 export default {
   name: "ProposalView",
-  components: { Proposal },
+  components: { ProposalList },
   data() {
     return {
       network: "",
+      activeProposals: [],
     };
   },
   computed: {
@@ -38,9 +61,16 @@ export default {
       proposalsLoaded: "getIsProposalsLoaded",
     }),
   },
-  methods: {},
+  methods: {
+    filterActive() {
+      return this.proposals(this.network).filter(
+        (proposal) => proposal.status == 1 || proposal.status == 2
+      );
+    },
+  },
   async created() {
     this.network = this.$route.params.network;
+    this.activeProposals = this.filterActive();
     await this.$store.dispatch("changeChainId", this.chainId(this.network));
     this.$watch(
       () => this.$route.params,

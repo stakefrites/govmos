@@ -22,37 +22,7 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <!-- <v-card-text>
-        <v-list-item-title class="text-h5 my-5"> Results </v-list-item-title>
-        <v-row>
-          <v-col>
-            <v-chip>
-              <strong class="mr-2">Yes</strong
-              >{{ proposal.finalTallyResult.yes }}
-            </v-chip>
-          </v-col>
-          <v-col>
-            <v-chip>
-              <strong class="mr-2">No</strong>
-              {{ proposal.finalTallyResult.no }}
-            </v-chip>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-chip>
-              <strong class="mr-2">No with veto</strong>
-              {{ proposal.finalTallyResult.noWithVeto }}
-            </v-chip>
-          </v-col>
-          <v-col>
-            <v-chip>
-              <strong class="mr-2">Abstain</strong
-              >{{ proposal.finalTallyResult.abstain }}
-            </v-chip>
-          </v-col>
-        </v-row>
-      </v-card-text> -->
+
       <v-expand-transition>
         <div v-if="expand">
           <v-list>
