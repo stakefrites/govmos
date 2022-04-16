@@ -1,4 +1,5 @@
 import _ from "lodash";
+import axios from "axios";
 import Network from "@/utils/Network";
 import CosmosDirectory from "@/utils/CosmosDirectory";
 import { MsgVote } from "cosmjs-types/cosmos/gov/v1beta1/tx";
@@ -8,7 +9,7 @@ const mapAsync = (array, fn) => {
   return Promise.all(array.map(fn));
 };
 
-const fetchNetworks = async ({ commit, state }, passedNetworks) => {
+const fetchNetworks = async ({ commit, state, dispatch }, passedNetworks) => {
   commit("setIsNetworksLoaded", false);
   const directory = CosmosDirectory();
   let chains = await directory.getChains();
@@ -30,6 +31,8 @@ const fetchNetworks = async ({ commit, state }, passedNetworks) => {
   });
   commit("setProposals", proposals);
   commit("setIsProposalsLoaded", true);
+
+  await dispatch("fetchPrices", fullNetworks);
   let accounts = [];
   for (let account of state.seedAccounts) {
     const wallet = { name: account.name, addresses: [], balances: {} };
@@ -56,6 +59,36 @@ const fetchPortfolio = async ({ commit, state, dispatch }) => {
   await dispatch("fetchAccounts");
   console.log("folio post dispatch", state.seedAccounts, state.networks);
   commit("setIsConfigDone", true);
+};
+
+const fetchPrices = async ({ commit, state }, chains) => {
+  console.log("chains is fecth prices", chains);
+  const asyncs = await mapAsync(chains, (chain) => {
+    const { coinGeckoId } = chain;
+    if (coinGeckoId !== undefined) {
+      const datarr = axios.get(
+        "https://api.coingecko.com/api/v3/simple/price",
+        {
+          params: {
+            ids: coinGeckoId,
+            vs_currencies: "usd",
+          },
+        }
+      );
+      return datarr;
+    }
+  });
+  const mappedRequest = asyncs.map((price, i) => {
+    const configChain = chains[i];
+    return {
+      price: price.status === 200 ? price.data[configChain.coinGeckoId].usd : 0,
+      name: price.status === 200 ? configChain.name : configChain.name,
+    };
+  });
+  console.log("price, map request", mappedRequest);
+  commit("setPrices", _.keyBy(mappedRequest, "name"));
+  commit("setIsPricesLoaded", true);
+  return mappedRequest;
 };
 
 const fetchPreferred = async ({ commit, state }) => {
@@ -174,6 +207,7 @@ const loadPreferredChains = async ({ commit, state }) => {
 
 export default {
   fetchNetworks,
+  fetchPrices,
   fetchPortfolio,
   fetchPreferred,
   fetchAccounts,

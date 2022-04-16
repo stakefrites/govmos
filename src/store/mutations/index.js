@@ -16,6 +16,12 @@ export default {
   setKeplr(state, keplr) {
     state.wallet.keplr = keplr;
   },
+  setPrices(state, prices) {
+    state.prices = prices;
+  },
+  setIsPricesLoaded(state, isLoaded) {
+    state.isPricesLoaded = isLoaded;
+  },
   setProposals(state, proposals) {
     state.proposals = _.keyBy(proposals, "name");
   },
