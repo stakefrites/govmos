@@ -7,7 +7,7 @@
 
       <v-app-bar-title>
         <div class="h4">
-          <b>Govmos</b>
+          <b>Moscos</b>
         </div>
       </v-app-bar-title>
 
@@ -23,23 +23,18 @@
         <router-view />
       </v-main>
     </v-container>
-    <v-footer padless>
-      <v-card flat tile width="100%" class="red lighten-1 text-center">
-        <v-card-text>
-          <v-btn v-for="icon in icons" :key="icon" class="mx-4" icon>
-            <v-icon size="24px">
-              {{ icon }}
-            </v-icon>
-          </v-btn>
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-text class="white--text">
+    <v-footer class="bg-primary">
+      <v-row justify="center" class="text-center" no-gutters>
+        <v-col>
+          <v-btn variant="text" color="black" class="mx-1" xl> Trakmos </v-btn>
+          <v-divider class="mx-1" vertical></v-divider>
+          <v-btn variant="text" color="black" class="mx-1" xl> Govmos </v-btn>
+        </v-col>
+        <v-col class="text-center text-white mt-4" cols="12">
           {{ new Date().getFullYear() }} —
           <strong>Stake Frites (🥩 , 🍟)</strong>
-        </v-card-text>
-      </v-card>
+        </v-col>
+      </v-row>
     </v-footer>
   </v-app>
 </template>

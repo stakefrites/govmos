@@ -1,9 +1,10 @@
 <template>
   <v-card variant="outlined">
+    <v-card-header> </v-card-header>
     <v-row v-if="proposalsLoaded" align="center" justify="center">
       <v-col>
         <v-list three-line>
-          <v-btn variant="text" to="/">
+          <v-btn variant="text" to="/govmos">
             <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
             Back
           </v-btn>

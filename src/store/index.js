@@ -21,7 +21,8 @@ const loadPreferredChains = async ({ commit, state }) => {
 const fetchNetworks = async ({ commit, state }) => {
   const directory = CosmosDirectory();
   let chains = await directory.getChains();
-  const networks = state.networks
+  console.log(chains);
+  const networks = state.available
     .filter((el) => el.enabled !== false)
     .map((data) => {
       const registryData = chains[data.name] || {};
@@ -47,16 +48,16 @@ const fetchNetworks = async ({ commit, state }) => {
 
 export default createStore({
   state: {
-    networks: [
+    available: [
       { name: "akash" },
       { name: "chihuahua" },
       { name: "cerberus" },
-
-      //{ name: "osmosis" },
+      { name: "osmosis" },
       { name: "cosmoshub" },
-      //{ name: "lumnetwork" },
+      { name: "lumnetwork" },
       { name: "juno" },
     ],
+    networks: [],
     proposals: {},
     isNetworksLoaded: false,
     wallet: {
@@ -73,6 +74,9 @@ export default createStore({
   getters: {
     getNetworks(state) {
       return state.networks;
+    },
+    getAllNetworks(state) {
+      return state.available;
     },
     getNetworkByName: (state) => (name) => {
       const networks = _.keyBy(state.networks, "name");
@@ -201,6 +205,10 @@ export default createStore({
       );
       console.log(gas);
     },
+    async saveAccounts({ commit, state }, accounts) {
+      console.log("in saving account");
+    },
+    async saveNetworks({ commit, state }, networks) {},
   },
   modules: {},
 });

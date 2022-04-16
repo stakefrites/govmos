@@ -1,5 +1,10 @@
 <template>
   <v-row>
+    <v-col>
+      <div class="text-h2">Govmos</div>
+    </v-col>
+  </v-row>
+  <v-row>
     <v-col
       xs="12"
       sm="6"
