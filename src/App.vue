@@ -50,7 +50,14 @@ export default {
     Logo,
   },
   async created() {
-    await this.$store.dispatch("fetchNetworks");
+    await this.$store.dispatch("fetchPortfolio");
+    console.log(this.$store.state);
+    if (!this.$store.state.isConfigDone) {
+      await this.$store.dispatch("fetchNetworks", this.$store.state.available);
+    } else {
+      await this.$store.dispatch("fetchNetworks", this.$store.state.networks);
+    }
+
     await this.$store.dispatch("fetchAddress");
   },
   computed: {

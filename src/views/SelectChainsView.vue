@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="networksLoaded">
+  <v-row>
     <v-col>
       <v-card>
         <v-card-header-text>
@@ -45,7 +45,33 @@
             stepName="accounts"
             :handler="finishStep"
           >
-            <v-expansion-panel-text> </v-expansion-panel-text>
+            <v-expansion-panel-text>
+              <div
+                v-for="(account, index) in flow.accounts.fields"
+                :key="account"
+              >
+                <div class="text-p">Account #{{ index + 1 }}</div>
+                <v-text-field
+                  density="compact"
+                  clearable
+                  label="Wallet name"
+                  v-model="flow.accounts.fields[index].name"
+                  placeholder="myPersonalWallet"
+                >
+                </v-text-field>
+                <v-text-field
+                  density="compact"
+                  clearable
+                  label="Address"
+                  v-model="flow.accounts.fields[index].address"
+                  placeholder="cosmos1zjq5sn0fe78s7fds8lhusjd7dufidjss9geughf7"
+                >
+                </v-text-field>
+              </div>
+              <v-btn flat @click="addAccount">
+                <v-icon large>mdi-plus</v-icon>
+              </v-btn>
+            </v-expansion-panel-text>
           </Step>
           <Step
             :status="flow.networks.done"
@@ -81,8 +107,13 @@ export default {
       flow: {
         steps: [],
         accounts: {
+          fields: [
+            {
+              name: "",
+              address: "",
+            },
+          ],
           done: false,
-          selected: [],
           next: "confirm",
         },
         networks: {
@@ -94,24 +125,31 @@ export default {
     };
   },
   methods: {
+    addAccount() {
+      this.flow.accounts.fields.push({ name: "", address: "" });
+    },
     finishStep(step) {
       this.flow[step].done = true;
       this.flow.steps = [this.flow[step].next];
     },
-    save() {
-      console.log("saving");
-      this.$store.dispatch("saveAccounts", this.flow.accounts.selected);
-      this.$store.dispatch("saveNetworks", this.flow.networks.selected);
+    async save() {
+      await this.$store.dispatch("saveNetworks", this.flow.networks.selected);
+      await this.$store.dispatch("saveAccounts", this.flow.accounts.fields);
       this.$router.push("/govmos");
     },
   },
-  created() {},
+  created() {
+    if (this.isConfigDone) {
+      this.$router.push("/govmos");
+    }
+  },
   computed: {
     ...mapGetters({
       networks: "getNetworks",
       networksLoaded: "getIsNetworksLoaded",
       proposalsLoaded: "getIsProposalsLoaded",
       proposals: "getProposalsByName",
+      isConfigDone: "getIsConfigDone",
     }),
     icon() {
       return this.networksLoaded

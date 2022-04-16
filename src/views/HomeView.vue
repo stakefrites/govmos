@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col>
-      <div class="text-h2">Govmos</div>
+      <div class="text-h2">Dashboard</div>
     </v-col>
   </v-row>
   <v-row>
@@ -60,9 +60,44 @@
             </tr>
           </tbody>
         </v-table>
+        <v-table v-if="balancesLoaded">
+          <thead>
+            <tr>
+              <th colspan="2">Balances</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td>{{ balances(network.name) }}</td>
+            </tr>
+          </tbody>
+        </v-table>
+        <v-table v-else>
+          <tbody>
+            <tr>
+              <td colspan="2">
+                <v-progress-linear
+                  indeterminate
+                  color="primary"
+                ></v-progress-linear>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
 
-        <v-card-actions v-if="proposalsLoaded">
-          <v-btn :to="`/proposals/${network.name}`">View Proposals</v-btn>
+        <v-card-actions>
+          <v-btn v-if="proposalsLoaded" :to="`/proposals/${network.name}`"
+            >View Proposals</v-btn
+          >
+          <v-btn v-if="balancesLoaded" :to="`/balances/${network.name}`"
+            >View Balances</v-btn
+          >
+          <v-progress-linear
+            v-else
+            indeterminate
+            color="primary"
+          ></v-progress-linear>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -75,13 +110,19 @@ export default {
   name: "HomeView",
   components: {},
   data() {},
-  created() {},
+  async created() {
+    console.log("fetching network", this.networks);
+    await this.$store.dispatch("fetchNetworks", this.networks);
+    await this.$store.dispatch("fetchAddress");
+  },
   computed: {
     ...mapGetters({
       networks: "getNetworks",
       networksLoaded: "getIsNetworksLoaded",
       proposalsLoaded: "getIsProposalsLoaded",
+      balancesLoaded: "getIsBalancesLoaded",
       proposals: "getProposalsByName",
+      balances: "getBalancesByName",
     }),
   },
 };

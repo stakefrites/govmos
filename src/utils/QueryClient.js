@@ -9,6 +9,7 @@ import {
   setupGovExtension,
 } from "@cosmjs/stargate";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
+import { toBech32, fromBech32 } from "@cosmjs/encoding";
 
 /**
  * Make Client
@@ -236,6 +237,85 @@ const QueryClient = async (chainId, rpcUrls, restUrls) => {
     );
   }
 
+  const getBalances = async (a, chains) => {
+    const stakedReducer = (acc, item) => {
+      return acc + parseInt(item.balance.amount);
+    };
+
+    const rewardsReducer = (acc, item) => {
+      if (item.reward.length == 0) {
+        return 0;
+      } else {
+        return acc + parseInt(item.reward[0].amount);
+      }
+    };
+    const bech = fromBech32(a);
+    const portfolio = [];
+    for (let chain of chains) {
+      const { decimals, prefix, coingecko_id, denom, name } = chain;
+
+      const chainAddress = toBech32(prefix, bech.data);
+
+      const client = await makeClient(chain.rpcUrl);
+      let all = await client.bank.totalSupply();
+
+      let liquid;
+      try {
+        liquid = await await client.bank.allBalances(chainAddress);
+      } catch (error) {
+        console.log("Error in all balances", error);
+        liquid = { delegationResponses: [] };
+      }
+      const rewardsReq = await client.distribution.delegationTotalRewards(
+        chainAddress
+      );
+
+      let staked;
+      try {
+        staked = await client.staking.delegatorDelegations(chainAddress);
+      } catch (error) {
+        staked = { delegationResponses: [] };
+      }
+      const stakingAcc = 0;
+      const rewardsAcc = 0;
+
+      const totalTokensStaked =
+        staked.delegationResponses.length == 0
+          ? 0
+          : staked.delegationResponses.reduce(stakedReducer, stakingAcc);
+
+      const totalTokensRewards =
+        rewardsReq.rewards.length == 0
+          ? 0
+          : rewardsReq.rewards.reduce(rewardsReducer, rewardsAcc);
+
+      const liquidBal = liquid.find((val) =>
+        val.denom == denom ? true : false
+      );
+      const rewards = totalTokensRewards / Math.pow(10, decimals + 18);
+
+      const stakedBalance = (
+        totalTokensStaked / Math.pow(10, decimals)
+      ).toFixed(2);
+      const liquidBalance = liquidBal
+        ? (parseFloat(liquidBal.amount) / Math.pow(10, decimals)).toFixed(2)
+        : 0;
+      const total =
+        rewards + parseFloat(stakedBalance) + parseFloat(liquidBalance);
+      const data = {
+        name: chain.name,
+        rewards,
+        staked: parseFloat(stakedBalance),
+        liquid: parseFloat(liquidBalance),
+        coingecko_id,
+        total,
+        chainAddress,
+      };
+      portfolio.push(data);
+    }
+    return portfolio;
+  };
+
   return {
     connected: !!rpcUrl && !!restUrl,
     rpcUrl,
@@ -251,6 +331,7 @@ const QueryClient = async (chainId, rpcUrls, restUrls) => {
     getGrants,
     getVotingPower,
     getWithdrawAddress,
+    getBalances,
   };
 };
 
