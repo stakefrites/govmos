@@ -13,7 +13,10 @@
 
       <template v-slot:append>
         <v-app-bar-title>
-          <v-chip v-if="keplr" @click="disconnectKeplr()">{{ address }}</v-chip>
+          <v-chip class="mr-1"  to="/settings">
+            <v-icon class="mr-1" size="x-large"> mdi-account-cog </v-icon>
+          </v-chip>
+          <v-chip v-if="keplr" @click="disconnectKeplr()">{{ excerptAddress(address) }}</v-chip>
           <v-chip @click="connectKeplr()" v-else>Connect Wallet</v-chip>
         </v-app-bar-title>
       </template>
@@ -68,6 +71,9 @@ export default {
     }),
   },
   methods: {
+    excerptAddress(address) {
+      return address.substring(0, 10) + "..." + address.substring(address.length - 5);
+    },
     async connectKeplr() {
       await this.$store.dispatch("connectKeplr");
     },

@@ -21,6 +21,9 @@ export default {
   components: { NetworkSummary },
   data() {},
   async created() {
+     if (this.isConfigDone) {
+      this.$router.push("/dashboard");
+    }
     await this.$store.dispatch("fetchNetworks", this.networks);
     await this.$store.dispatch("fetchAddress");
   },
@@ -32,9 +35,14 @@ export default {
       balancesLoaded: "getIsBalancesLoaded",
       proposals: "getProposalsByName",
       balances: "getBalancesByName",
+      portfolio: "getPortfolio",
     }),
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.code {
+  background-color: #f5f5f5;
+}
+</style>

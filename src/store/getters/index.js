@@ -16,6 +16,9 @@ export default {
   getAddress(state) {
     return state.wallet.address;
   },
+   getPortfolio(state) {
+    return state.portfolio;
+  },
   getKeplr(state) {
     return state.wallet.keplr;
   },

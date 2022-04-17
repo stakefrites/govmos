@@ -52,15 +52,6 @@ const fetchNetworks = async ({ commit, state, dispatch }, passedNetworks) => {
   commit("setPortfolio", accounts);
   commit("setIsBalancesLoaded", true);
 };
-
-const fetchPortfolio = async ({ commit, state, dispatch }) => {
-  console.log("fetch folio");
-  await dispatch("fetchPreferred");
-  await dispatch("fetchAccounts");
-  console.log("folio post dispatch", state.seedAccounts, state.networks);
-  commit("setIsConfigDone", true);
-};
-
 const fetchPrices = async ({ commit, state }, chains) => {
   console.log("chains is fecth prices", chains);
   const asyncs = await mapAsync(chains, (chain) => {
@@ -90,6 +81,20 @@ const fetchPrices = async ({ commit, state }, chains) => {
   commit("setIsPricesLoaded", true);
   return mappedRequest;
 };
+
+
+const fetchPortfolio = async ({ commit, state, dispatch }) => {
+  console.log("fetch folio");
+  await dispatch("fetchPreferred");
+  await dispatch("fetchAccounts");
+  console.log("folio post dispatch", state.seedAccounts.length, state.networks.length);
+  if (state.seedAccounts.length == 0 || state.networks.length == 0) {
+    commit('setIsConfigDone', false)
+  } else {
+    commit("setIsConfigDone", true);
+  }
+};
+
 
 const fetchPreferred = async ({ commit, state }) => {
   const preferredChains = localStorage.getItem("preferredChains");
@@ -196,14 +201,12 @@ const saveNetworks = async ({ commit, state }, networks) => {
   commit("setNetworks", savedNetworks);
 };
 
-const changePreferredChains = async ({ commit, state }, preferences) => {
-  localStorage.setItem("preferredChains", JSON.stringify(preferences));
-  commit("setPreferredChains", preferences);
-};
 
-const loadPreferredChains = async ({ commit, state }) => {
-  const preferredChains = localStorage.getItem("preferredChains");
-};
+
+const removeChain = async ({ commit, dispatch, state }, name) => { 
+  const filtered = state.networks.filter(network => network.name != name);
+  dispatch("saveNetworks", filtered);
+}
 
 export default {
   fetchNetworks,
@@ -218,4 +221,5 @@ export default {
   castVote,
   saveAccounts,
   saveNetworks,
+  removeChain
 };

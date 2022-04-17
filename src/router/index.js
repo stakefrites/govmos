@@ -6,14 +6,21 @@ const routes = [
     component: () => import("../views/SelectChainsView.vue"),
   },
   {
-    path: "/govmos",
+    path: "/dashboard",
+    name: "dashboard",
     component: () => import("../views/HomeView.vue"),
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: () => import("../views/SettingsView.vue"),
   },
   {
     path: "/proposals/:network",
     name: "proposals",
     component: () => import("../views/ProposalView.vue"),
   },
+  
 ];
 
 const router = createRouter({

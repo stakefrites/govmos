@@ -135,12 +135,12 @@ export default {
     async save() {
       await this.$store.dispatch("saveNetworks", this.flow.networks.selected);
       await this.$store.dispatch("saveAccounts", this.flow.accounts.fields);
-      this.$router.push("/govmos");
+      this.$router.push("/dashboard");
     },
   },
   created() {
     if (this.isConfigDone) {
-      this.$router.push("/govmos");
+      this.$router.push("/dashboard");
     }
   },
   computed: {

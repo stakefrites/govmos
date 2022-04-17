@@ -4,7 +4,7 @@
     <v-row v-if="proposalsLoaded" align="center" justify="center">
       <v-col>
         <v-list three-line>
-          <v-btn variant="text" to="/govmos">
+          <v-btn variant="text" @click="goBack()">
             <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
             Back
           </v-btn>
@@ -68,6 +68,9 @@ export default {
         (proposal) => proposal.status == 1 || proposal.status == 2
       );
     },
+    goBack() {
+      this.$router.go(-1);
+    }
   },
   async created() {
     this.network = this.$route.params.network;

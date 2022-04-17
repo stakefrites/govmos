@@ -49,9 +49,7 @@
   <v-expand-transition>
     <div v-if="expand">
       <v-list>
-        <v-list-item>
-          {{ fullDescription }}
-        </v-list-item>
+        <v-list-item>{{ fullDescription }}</v-list-item>
         <v-list-item v-if="isDone">
           <BarChart :results="proposal.finalTallyResult" />
         </v-list-item>

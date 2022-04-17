@@ -8,7 +8,7 @@ export default {
     { name: "lumnetwork" },
     { name: "juno" },
     { name: "comdex" },
-    { name: "secretnetwork" },
+    //{ name: "secretnetwork" },
     { name: "sifchain" },
     { name: "sentinel" },
   ],
