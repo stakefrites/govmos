@@ -19,10 +19,15 @@ const fetchNetworks = async ({ commit, state, dispatch }, passedNetworks) => {
       const registryData = chains[data.name] || {};
       return { ...registryData, ...data };
     });
-
+  const images = {};
   const fullNetworks = await mapAsync(networks, async (network) => {
+    images[network.name] = network.image;
+    commit("setImage", network)
     return await Network(network);
+
   });
+  localStorage.setItem("networks", JSON.stringify(fullNetworks));
+  localStorage.setItem("images", JSON.stringify(images));
   commit("setNetworks", fullNetworks);
   commit("setIsNetworksLoaded", true);
   const proposals = await mapAsync(fullNetworks, async (network) => {
@@ -33,12 +38,16 @@ const fetchNetworks = async ({ commit, state, dispatch }, passedNetworks) => {
   commit("setIsProposalsLoaded", true);
 
   await dispatch("fetchPrices", fullNetworks);
+};
+
+const fetchBalances = async ({ commit, state }) => { 
+  console.log()
   let accounts = [];
   for (let account of state.seedAccounts) {
     const wallet = { name: account.name, addresses: [], balances: {} };
-    const folio = await fullNetworks[0].queryClient.getBalances(
+    const folio = await state.networks[0].queryClient.getBalances(
       account.address,
-      fullNetworks
+      state.networks
     );
     wallet.balances = _.keyBy(folio, "name");
     console.log("folio", folio);
@@ -48,12 +57,14 @@ const fetchNetworks = async ({ commit, state, dispatch }, passedNetworks) => {
     }
     accounts.push(wallet);
   }
+  localStorage.setItem("balances", JSON.stringify(accounts))
   console.log("wallet", accounts);
   commit("setPortfolio", accounts);
   commit("setIsBalancesLoaded", true);
-};
+}
+
+
 const fetchPrices = async ({ commit, state }, chains) => {
-  console.log("chains is fecth prices", chains);
   const asyncs = await mapAsync(chains, (chain) => {
     const { coinGeckoId } = chain;
     if (coinGeckoId !== undefined) {
@@ -76,12 +87,38 @@ const fetchPrices = async ({ commit, state }, chains) => {
       name: price.status === 200 ? configChain.name : configChain.name,
     };
   });
-  console.log("price, map request", mappedRequest);
-  commit("setPrices", _.keyBy(mappedRequest, "name"));
+  
+  
+  const pricesMap = _.keyBy(mappedRequest, "name");
+  
+  let expire = Date.now() + 1000 * 60 * 60 * 24;
+  localStorage.setItem("prices", JSON.stringify({expire, prices : pricesMap}))
+  commit("setPrices", pricesMap);
   commit("setIsPricesLoaded", true);
   return mappedRequest;
 };
 
+
+const loadCache = async ({ commit, state, dispatch }) => { 
+  const prices = JSON.parse(localStorage.getItem("prices"));
+  if (prices && prices.expire > Date.now()) {
+    console.log("cahce is stil valid")
+    commit("setPrices", prices.prices);
+    commit("setIsPricesLoaded", true)
+  }
+  const images = JSON.parse(localStorage.getItem("images"));
+  if (images) { 
+    commit("setImages", images);
+  }
+  const balances = JSON.parse(localStorage.getItem("balances"));
+  if (balances) { 
+    commit("setPortfolio", balances)
+    commit("setIsBalancesLoaded", true)
+  }
+  const accounts = JSON.parse(localStorage.getItem("accounts"));
+  const networks = JSON.parse(localStorage.getItem("networks"));
+ 
+}
 
 const fetchPortfolio = async ({ commit, state, dispatch }) => {
   console.log("fetch folio");
@@ -205,7 +242,8 @@ const saveNetworks = async ({ commit, state }, networks) => {
 
 const removeChain = async ({ commit, dispatch, state }, name) => { 
   const filtered = state.networks.filter(network => network.name != name);
-  dispatch("saveNetworks", filtered);
+  console.log("filtered", filtered.map(net => net.name))
+  dispatch("saveNetworks", filtered.map(net => net.name));
 }
 
 export default {
@@ -214,6 +252,7 @@ export default {
   fetchPortfolio,
   fetchPreferred,
   fetchAccounts,
+  fetchBalances,
   connectKeplr,
   disconnectKeplr,
   fetchAddress,
@@ -221,5 +260,6 @@ export default {
   castVote,
   saveAccounts,
   saveNetworks,
-  removeChain
+  removeChain,
+  loadCache
 };

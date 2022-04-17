@@ -14,7 +14,10 @@
       <template v-slot:append>
         <v-app-bar-title>
           <v-chip class="mr-1"  to="/settings">
-            <v-icon class="mr-1" size="x-large"> mdi-account-cog </v-icon>
+            <v-icon size="x-large"> mdi-account-cog </v-icon>
+          </v-chip>
+           <v-chip class="mr-1"  @click="fetchBalances()">
+            <v-icon size="x-large"> mdi-refresh </v-icon>
           </v-chip>
           <v-chip v-if="keplr" @click="disconnectKeplr()">{{ excerptAddress(address) }}</v-chip>
           <v-chip @click="connectKeplr()" v-else>Connect Wallet</v-chip>
@@ -44,7 +47,7 @@
 
 <script>
 import Logo from "@/components/Logo.vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "App",
@@ -53,8 +56,8 @@ export default {
     Logo,
   },
   async created() {
+    await this.$store.dispatch("loadCache");
     await this.$store.dispatch("fetchPortfolio");
-    console.log(this.$store.state);
     if (!this.$store.state.isConfigDone) {
       await this.$store.dispatch("fetchNetworks", this.$store.state.available);
     } else {
@@ -71,15 +74,17 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      fetchPortfolio: "fetchPortfolio",
+      fetchBalances: "fetchBalances",
+      fetchNetworks: "fetchNetworks",
+      fetchAddress: "fetchAddress",
+      disconnectKeplr: "disconnectKeplr",
+      connectKeplr: "connectKeplr",
+    }),
     excerptAddress(address) {
       return address.substring(0, 10) + "..." + address.substring(address.length - 5);
-    },
-    async connectKeplr() {
-      await this.$store.dispatch("connectKeplr");
-    },
-    async disconnectKeplr() {
-      await this.$store.dispatch("disconnectKeplr");
-    },
+    }
   },
 
   data: () => ({

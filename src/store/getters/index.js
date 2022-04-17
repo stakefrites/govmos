@@ -13,6 +13,9 @@ export default {
       return networks[name];
     }
   },
+  getImageByName: (state) => (name) => {
+    return state.images[name];
+  },
   getAddress(state) {
     return state.wallet.address;
   },

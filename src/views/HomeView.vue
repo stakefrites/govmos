@@ -21,9 +21,9 @@ export default {
   components: { NetworkSummary },
   data() {},
   async created() {
-     if (this.isConfigDone) {
-      this.$router.push("/dashboard");
-    }
+    /* if (!this.isConfigDone) {
+      this.$router.push("/");
+    } */
     await this.$store.dispatch("fetchNetworks", this.networks);
     await this.$store.dispatch("fetchAddress");
   },

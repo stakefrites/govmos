@@ -14,13 +14,13 @@
   </v-col>
 </v-row>
 <v-row>
-  <v-col cols="6" v-for="network in networks" :key="network.name">
+  <v-col md="12" sm="12" v-for="network in networks" :key="network.name">
   <v-card variant="outlined" :loading="networksLoaded">
     <v-card-title>
       <v-avatar size="50" class="mr-3">
-        <img height="35" :src="network.image" />
+        <img height="35" :src="image(network.name)" />
       </v-avatar>
-      <strong>{{ network.prettyName }}</strong>
+      <strong>{{ network.name }}</strong>
       </v-card-title>
       <v-btn @click="removeChain(network.name)" variant="text"  prepend-icon="mdi-close-circle">Remove</v-btn>
       
@@ -33,7 +33,7 @@
   </v-col>
 </v-row>
 <v-row>
-  <v-col cols="6" v-for="wallet in portfolio" :key="wallet.name">
+  <v-col lg="6" md="12" v-for="wallet in portfolio" :key="wallet.name">
     <v-card>
       <v-card-header>
         <v-card-title>{{ wallet.name }}</v-card-title>
@@ -67,6 +67,7 @@ export default {
       portfolio: "getPortfolio",
       networks: "getNetworks",
       networksLoaded: "getIsNetworksLoaded",
+      image: "getImageByName"
     }),
   },
   methods: {

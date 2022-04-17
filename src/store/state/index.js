@@ -12,6 +12,7 @@ export default {
     { name: "sifchain" },
     { name: "sentinel" },
   ],
+  images: {},
   isBalancesLoaded: false,
   isPricesLoaded: false,
   accounts: [],

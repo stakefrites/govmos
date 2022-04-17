@@ -3,9 +3,9 @@
     <v-card variant="outlined" :loading="networksLoaded">
       <v-card-title>
         <v-avatar size="50" class="mr-3">
-          <img height="35" :src="network.image" />
+          <img height="35" :src="image(network.name)" />
         </v-avatar>
-        <strong>{{ network.prettyName }}</strong>
+        <strong>{{ network.name }}</strong>
         <span v-if="pricesLoaded">
           - {{ price(network.name) }} $USD</span
         ></v-card-title
@@ -140,6 +140,7 @@ export default {
       proposals: "getProposalsByName",
       balances: "getBalancesByName",
       price: "getPriceByName",
+      image: "getImageByName"
     }),
   },
 };

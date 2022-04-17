@@ -13,6 +13,12 @@ export default {
   setAddress(state, address) {
     state.wallet.address = address;
   },
+  setImage(state, { name, image }) { 
+    state.images[name] = image;
+  },
+  setImages(state, images) { 
+    state.images = images;
+  },
   setKeplr(state, keplr) {
     state.wallet.keplr = keplr;
   },
