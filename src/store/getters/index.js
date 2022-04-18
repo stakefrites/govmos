@@ -31,9 +31,7 @@ export default {
     }
   },
   getPriceByName: (state) => (name) => {
-    console.log("getting price for", name);
     if (state.prices[name]) {
-      console.log("price is", state.prices[name].price);
       return state.prices[name].price;
     }
   },
@@ -43,19 +41,43 @@ export default {
       return network[name].chainId;
     }
   },
+  getTotalValue(state) {
+    let totalValue = {
+      total: 0,
+      wallets: []
+    }
+    for (let wallet of state.portfolio) {
+    let folio = {name: wallet.name, value: 0}
+    for (let network of state.networks) {
+      const name = network.name;
+        if (wallet.balances[name]) {
+          const price = state.prices[name].price;
+          const value = wallet.balances[name].total * price;
+          totalValue.total += value;
+          folio.value += value;
+        }
+    }
+    totalValue.wallets.push(folio)
+    }
+    return totalValue;
+  },
   getBalancesByName: (state) => (name) => {
     let balances = {
       total: 0,
       rewards: 0,
       staked: 0,
       liquid: 0,
+      value: 0,
     };
     for (let wallet of state.portfolio) {
       if (wallet.balances[name]) {
-        balances.total += wallet.balances[name].total;
+        const price = state.prices[name].price;
+        const value = wallet.balances[name].total * price;
+        balances.total += wallet.balances[name].total;;
         balances.rewards += wallet.balances[name].rewards;
         balances.staked += wallet.balances[name].staked;
         balances.liquid += wallet.balances[name].liquid;
+        balances.value += value
       }
     }
     return balances;

@@ -2,7 +2,6 @@ import _ from "lodash";
 import axios from "axios";
 import Network from "@/utils/Network";
 import CosmosDirectory from "@/utils/CosmosDirectory";
-import { MsgVote } from "cosmjs-types/cosmos/gov/v1beta1/tx";
 import { fromBech32, toBech32 } from "@cosmjs/encoding";
 
 const mapAsync = (array, fn) => {
@@ -30,18 +29,19 @@ const fetchNetworks = async ({ commit, state, dispatch }, passedNetworks) => {
   localStorage.setItem("images", JSON.stringify(images));
   commit("setNetworks", fullNetworks);
   commit("setIsNetworksLoaded", true);
+};
+
+const fetchProposals = async ({ commit, state }) => { 
   const proposals = await mapAsync(fullNetworks, async (network) => {
     const props = await network.queryClient.tmClient.gov.proposals(0, "", "");
     return { name: network.name, proposals: props.proposals };
   });
   commit("setProposals", proposals);
   commit("setIsProposalsLoaded", true);
-
-  await dispatch("fetchPrices", fullNetworks);
-};
+}
 
 const fetchBalances = async ({ commit, state }) => { 
-  console.log()
+  console.log("getting balances...right?", state)
   let accounts = [];
   for (let account of state.seedAccounts) {
     const wallet = { name: account.name, addresses: [], balances: {} };
@@ -110,13 +110,23 @@ const loadCache = async ({ commit, state, dispatch }) => {
   if (images) { 
     commit("setImages", images);
   }
+  const networks = JSON.parse(localStorage.getItem("networks"));
+  if (networks) { 
+    //commit("setNetworks", networks);
+    await dispatch("fetchNetworks", networks);
+  }
+  const seedAccounts = JSON.parse(localStorage.getItem("seedAccounts"));
+  if (seedAccounts) { 
+    commit("setAccounts", seedAccounts)
+  }
   const balances = JSON.parse(localStorage.getItem("balances"));
-  if (balances) { 
+  console.log("state before balances", state.seedAccounts, state.networks)
+  if (balances && balances.length > 0) {
     commit("setPortfolio", balances)
     commit("setIsBalancesLoaded", true)
+  } else { 
+    dispatch("fetchBalances");
   }
-  const accounts = JSON.parse(localStorage.getItem("accounts"));
-  const networks = JSON.parse(localStorage.getItem("networks"));
  
 }
 
@@ -238,7 +248,12 @@ const saveNetworks = async ({ commit, state }, networks) => {
   commit("setNetworks", savedNetworks);
 };
 
-
+const resetCache = async ({ commit, dispatch, state }) => { 
+  localStorage.removeItem("prices");
+  localStorage.removeItem("balances");
+  localStorage.removeItem("accounts");
+  localStorage.removeItem("networks");
+}
 
 const removeChain = async ({ commit, dispatch, state }, name) => { 
   const filtered = state.networks.filter(network => network.name != name);
@@ -248,6 +263,7 @@ const removeChain = async ({ commit, dispatch, state }, name) => {
 
 export default {
   fetchNetworks,
+  fetchProposals,
   fetchPrices,
   fetchPortfolio,
   fetchPreferred,

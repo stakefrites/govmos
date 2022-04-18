@@ -5,6 +5,27 @@
     </v-col>
   </v-row>
   <v-row>
+    <v-col>
+      <v-card>
+        <v-card-title>
+          Total value: {{totalValue.total}}
+        </v-card-title>
+        <v-list>
+          <v-list-item v-for="wallet in totalValue.wallets" :key="wallet.name">
+            <v-list-item-content>
+              <v-list-item-title>
+                {{wallet.name}}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{wallet.value}}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-col>
+  </v-row>
+  <v-row>
     <NetworkSummary
       v-for="network in networks"
       :key="network.name"
@@ -30,6 +51,7 @@ export default {
   computed: {
     ...mapGetters({
       networks: "getNetworks",
+      totalValue: "getTotalValue",
       networksLoaded: "getIsNetworksLoaded",
       proposalsLoaded: "getIsProposalsLoaded",
       balancesLoaded: "getIsBalancesLoaded",

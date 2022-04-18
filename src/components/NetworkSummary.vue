@@ -83,6 +83,10 @@
                   <td><strong>Rewards</strong></td>
                   <td>{{ balances(network.name).rewards }}</td>
                 </tr>
+                <tr>
+                  <td><strong>VALUE $</strong></td>
+                  <td>{{ balances(network.name).value }}</td>
+                </tr>
               </tbody>
             </v-table>
             <v-table v-else>
