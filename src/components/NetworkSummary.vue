@@ -105,7 +105,7 @@
         <v-btn v-if="proposalsLoaded" :to="`/proposals/${network.name}`"
           >View Proposals</v-btn
         >
-        <v-btn v-if="balancesLoaded" :to="`/balances/${network.name}`"
+        <v-btn disabled v-if="balancesLoaded" :to="`/balances/${network.name}`"
           >View Balances</v-btn
         >
         <v-progress-linear
