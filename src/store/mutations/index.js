@@ -4,6 +4,15 @@ export default {
   setNetworks(state, networks) {
     state.networks = networks;
   },
+  setAvailableNetworks(state, networks) {
+    const available = networks.filter((net) => { 
+      return !state.networks.find(net2 => net2.name === net.name)
+    })
+    state.availableNetworks = available;
+  },
+  addNetwork(state, network) {
+    state.networks = _.uniqBy([...state.networks, network],"name")
+  },
   setAccounts(state, accounts) {
     state.seedAccounts = accounts;
   },
