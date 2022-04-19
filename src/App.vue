@@ -121,6 +121,7 @@ body {
 .footer {
    z-index:  1 !important;
    margin-top: 100px !important;
+   width: 100% !important;
 }
 
 .body {
