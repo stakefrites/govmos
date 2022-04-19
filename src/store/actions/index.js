@@ -8,6 +8,21 @@ const mapAsync = (array, fn) => {
   return Promise.all(array.map(fn));
 };
 
+const fetchAvailableNetworks = async ({ commit, state, dispatch }) => {
+  console.log("fetching available");
+  const directory = CosmosDirectory();
+  let chains = await directory.getChains();
+  const networks = state.available
+    .filter((el) => el.enabled !== false)
+    .map((data) => {
+      const registryData = chains[data.name] || {};
+      return { ...registryData, ...data };
+    });
+  localStorage.setItem("availables", JSON.stringify(networks));
+  commit("setAvailableNetworks", networks);
+};
+
+
 const fetchNetworks = async ({ commit, state, dispatch }, passedNetworks) => {
   commit("setIsNetworksLoaded", false);
   const directory = CosmosDirectory();
@@ -41,6 +56,7 @@ const fetchProposals = async ({ commit, state }) => {
 }
 
 const fetchBalances = async ({ commit, state }) => { 
+  commit("setIsBalancesLoaded", false);
   console.log("getting balances...right?", state)
   let accounts = [];
   for (let account of state.seedAccounts) {
@@ -112,7 +128,6 @@ const loadCache = async ({ commit, state, dispatch }) => {
   }
   const networks = JSON.parse(localStorage.getItem("networks"));
   if (networks) { 
-    //commit("setNetworks", networks);
     await dispatch("fetchNetworks", networks);
   }
   const seedAccounts = JSON.parse(localStorage.getItem("seedAccounts"));
@@ -120,12 +135,17 @@ const loadCache = async ({ commit, state, dispatch }) => {
     commit("setAccounts", seedAccounts)
   }
   const balances = JSON.parse(localStorage.getItem("balances"));
-  console.log("state before balances", state.seedAccounts, state.networks)
   if (balances && balances.length > 0) {
     commit("setPortfolio", balances)
     commit("setIsBalancesLoaded", true)
   } else { 
     dispatch("fetchBalances");
+  }
+  const availableNetworks = JSON.parse(localStorage.getItem("availables"));
+  if (availableNetworks) {
+    commit("setAvailableNetworks", availableNetworks);
+  } else { 
+    await dispatch("fetchAvailableNetworks")
   }
  
 }
@@ -238,14 +258,14 @@ const saveAccounts = async ({ commit, state }, accounts) => {
   localStorage.setItem("seedAccounts", JSON.stringify(accounts));
   commit("setAccounts", accounts);
 };
+//@TODO remove this logic from the remove chain action
 const saveNetworks = async ({ commit, state }, networks) => {
-  console.log("saving net", networks);
-  const savedNetworks = networks.map((network) => ({
+  /* const savedNetworks = networks.map((network) => ({
     name: network,
   }));
 
   localStorage.setItem("preferredChains", JSON.stringify(savedNetworks));
-  commit("setNetworks", savedNetworks);
+  commit("setNetworks", savedNetworks); */
 };
 
 const resetCache = async ({ commit, dispatch, state }) => { 
@@ -255,13 +275,38 @@ const resetCache = async ({ commit, dispatch, state }) => {
   localStorage.removeItem("networks");
 }
 
-const removeChain = async ({ commit, dispatch, state }, name) => { 
-  const filtered = state.networks.filter(network => network.name != name);
-  console.log("filtered", filtered.map(net => net.name))
-  dispatch("saveNetworks", filtered.map(net => net.name));
+
+const refreshPrices = async ({ commit, dispatch, state }) => { 
+  localStorage.removeItem("prices");
+  dispatch("fetchPrices", state.networks)
+}
+const refreshBalances = async ({ commit, dispatch, state }) => { 
+  localStorage.removeItem("balances");
+  dispatch("fetchBalances", state.networks)
+}
+
+
+// @TODO: Add the removed chain in the availableNetworks state
+const removeChain = async ({ commit, dispatch, state }, network) => { 
+  const filtered = state.networks.filter(network1 => network1.name != network.name);
+  const availables = [...state.availableNetworks, network];
+  localStorage.setItem("networks", JSON.stringify(filtered));
+  localStorage.setItem("availables", JSON.stringify(availables));
+  commit("setNetworks", filtered);
+  commit("setAvailableNetworks", availables)
+}
+
+const addChain = async ({ commit, dispatch, state }, network) => {
+  let availables = state.availableNetworks.filter(net => net.name !== network.name);
+  let filtered = JSON.stringify(_.uniqBy([...state.networks,network],"name"))
+  localStorage.setItem("availables", JSON.stringify(availables));
+  localStorage.setItem("networks", JSON.stringify(filtered));
+  commit("addNetwork", network);
+  commit("setAvailableNetworks", availables);
 }
 
 export default {
+  fetchAvailableNetworks,
   fetchNetworks,
   fetchProposals,
   fetchPrices,
@@ -277,5 +322,9 @@ export default {
   saveAccounts,
   saveNetworks,
   removeChain,
-  loadCache
+  addChain,
+  loadCache,
+  resetCache,
+  refreshPrices,
+  refreshBalances
 };
