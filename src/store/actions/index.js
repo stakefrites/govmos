@@ -57,7 +57,7 @@ const fetchProposals = async ({ commit, state }) => {
 
 const fetchBalances = async ({ commit, state }) => { 
   commit("setIsBalancesLoaded", false);
-  console.log("getting balances...right?", state)
+  console.log("getting balances...right?", state.isBalancesLoaded)
   let accounts = [];
   for (let account of state.seedAccounts) {
     const wallet = { name: account.name, addresses: [], balances: {} };
@@ -135,11 +135,12 @@ const loadCache = async ({ commit, state, dispatch }) => {
     commit("setAccounts", seedAccounts)
   }
   const balances = JSON.parse(localStorage.getItem("balances"));
-  if (balances && balances.length > 0) {
+  if (balances && balances.length >0 ) {
+    console.log("loaded?")
     commit("setPortfolio", balances)
     commit("setIsBalancesLoaded", true)
   } else { 
-    dispatch("fetchBalances");
+    await dispatch("fetchBalances");
   }
   const availableNetworks = JSON.parse(localStorage.getItem("availables"));
   if (availableNetworks) {
@@ -258,14 +259,13 @@ const saveAccounts = async ({ commit, state }, accounts) => {
   localStorage.setItem("seedAccounts", JSON.stringify(accounts));
   commit("setAccounts", accounts);
 };
-//@TODO remove this logic from the remove chain action
-const saveNetworks = async ({ commit, state }, networks) => {
-  /* const savedNetworks = networks.map((network) => ({
-    name: network,
-  }));
 
-  localStorage.setItem("preferredChains", JSON.stringify(savedNetworks));
-  commit("setNetworks", savedNetworks); */
+
+const saveNetworks = async ({ commit, state,dispatch }, networks) => {
+  
+  console.log("networks", networks)
+  await dispatch("fetchNetworks", networks);
+  localStorage.setItem("networks", JSON.stringify(state.networks));
 };
 
 const resetCache = async ({ commit, dispatch, state }) => { 
@@ -286,7 +286,6 @@ const refreshBalances = async ({ commit, dispatch, state }) => {
 }
 
 
-// @TODO: Add the removed chain in the availableNetworks state
 const removeChain = async ({ commit, dispatch, state }, network) => { 
   const filtered = state.networks.filter(network1 => network1.name != network.name);
   const availables = [...state.availableNetworks, network];
