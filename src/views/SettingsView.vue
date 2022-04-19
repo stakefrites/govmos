@@ -1,48 +1,62 @@
 <template>
- <v-btn variant="text" @click="goBack()">
+ <v-btn variant="default" color="primary" class="mb-3" @click="goBack()">
     <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
       Back
   </v-btn>
 <v-row>
-  <v-col>
-    <div class="text-h2">Settings</div>
-  </v-col>
-</v-row>
-<v-row>
-  <v-col>
-    <div class="text-h4">Chains</div>
-  </v-col>
-</v-row>
-<v-row>
-  <v-col md="12" sm="12" v-for="network in networks" :key="network.name">
-  <v-card variant="outlined" :loading="networksLoaded">
-    <v-card-title>
-      <v-avatar size="50" class="mr-3">
-        <img height="35" :src="image(network.name)" />
-      </v-avatar>
-      <strong>{{ network.name }}</strong>
-      </v-card-title>
-      <v-btn @click="removeChain(network.name)" variant="text"  prepend-icon="mdi-close-circle">Remove</v-btn>
-      
+  <v-col cols="12">
+    <v-card color="primary">
+      <v-card-header>
+        <v-card-title class="my-5">
+            <strong>Activated Networks</strong>
+        </v-card-title>
+      </v-card-header>
+      <v-list three-line  >
+        <v-list-item  v-for="network in networks" :key="network.name" :prepend-avatar="image(network.name)">
+          <v-list-item-header>
+            <v-list-item-title>{{ network.name }}</v-list-item-title>
+          </v-list-item-header>
+          <v-btn @click="removeChain(network)" prepend-icon="mdi-minus" class="mr-3" color="primary" variant="outlined">Remove</v-btn>
+        </v-list-item>
+      </v-list>
+      <v-card-header>
+        <v-card-title class="my-5">
+            <strong>Add more networks</strong>
+        </v-card-title>
+      </v-card-header>
+       <v-list three-line >
+        <v-list-item v-for="network in availableNetworks" :key="network.name"  :prepend-avatar="image(network.name)">
+          <v-list-item-header>
+            <v-list-item-title>{{ network.name }}</v-list-item-title>
+          </v-list-item-header>
+          <v-btn @click="addChain(network)" prepend-icon="mdi-plus" class="mr-3" color="primary" variant="outlined">Add</v-btn>
+        </v-list-item>
+      </v-list>
     </v-card>
   </v-col>
 </v-row>
 <v-row>
-  <v-col>
-    <div class="text-h4">Wallets</div>
-  </v-col>
-</v-row>
-<v-row>
-  <v-col lg="6" md="12" v-for="wallet in portfolio" :key="wallet.name">
-    <v-card>
-      <v-card-header>
-        <v-card-title>{{ wallet.name }}</v-card-title>
+  <v-col lg="6" md="12">
+  <v-card color="primary">
+    <v-card-header>
+        <v-card-title class="my-5">
+            <strong>Wallets</strong>
+        </v-card-title>
       </v-card-header>
-      <v-card-text>
-      <div v-for="address in wallet.addresses" :key="address">
-          <code  class="code"> {{address}}</code><br/>
+      <div v-for="wallet in portfolio" :key="wallet.name">
+      <v-card-header>
+       <v-card-title class="my-51">
+         <strong>{{wallet.name}}</strong>
+        </v-card-title>
+      </v-card-header>
+      <v-list>
+        <v-list-item v-for="address in wallet.addresses" :key="address">
+      <div >
+          <code  class="code"> {{excerptAddress(address)}}</code><br/>
       </div>
-      </v-card-text>
+      </v-list-item>
+      </v-list>
+      </div>
     </v-card>
     
 
@@ -66,6 +80,7 @@ export default {
      ...mapGetters({
       portfolio: "getPortfolio",
       networks: "getNetworks",
+      availableNetworks: "getAvailableNetworks",
       networksLoaded: "getIsNetworksLoaded",
       image: "getImageByName"
     }),
@@ -74,9 +89,13 @@ export default {
      goBack() {
       this.$router.go(-1);
     },
-    async removeChain(name) {
-      await this.$store.dispatch("removeChain",name);
-    }
+    excerptAddress(address) {
+      return address.substring(0, 10) + "..." + address.substring(address.length - 10);
+    },
+    ...mapActions({
+      removeChain: "removeChain",
+      addChain: "addChain"
+    })
   },
   async created() {
   

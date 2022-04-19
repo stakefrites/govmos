@@ -1,15 +1,14 @@
 <template>
+
   <v-row>
-    <v-col>
-      <div class="text-h2">Dashboard</div>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col>
-      <v-card>
+    <v-col md="12" sm="12" lg="6">
+      <v-card  color="primary" v-if="balancesLoaded">
         <v-card-title>
-          Total value: {{totalValue.total}}
+          <strong>Total</strong>
         </v-card-title>
+        <v-card-subtitle class="mb-2">
+              <strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong>
+        </v-card-subtitle>
         <v-list>
           <v-list-item v-for="wallet in totalValue.wallets" :key="wallet.name">
             <v-list-item-content>
@@ -17,7 +16,9 @@
                 {{wallet.name}}
               </v-list-item-title>
               <v-list-item-subtitle>
-                {{wallet.value}}
+                <v-chip color="success">
+                 <strong>{{parseFloat(wallet.value).toFixed(2)}} $</strong>
+                </v-chip>
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
