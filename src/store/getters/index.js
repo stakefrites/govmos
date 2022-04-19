@@ -3,6 +3,9 @@ export default {
   getNetworks(state) {
     return state.networks;
   },
+  getAvailableNetworks(state) { 
+    return state.availableNetworks;
+  },
   getIsConfigDone(state) {
     return state.isConfigDone;
   },
@@ -50,8 +53,11 @@ export default {
     let folio = {name: wallet.name, value: 0}
     for (let network of state.networks) {
       const name = network.name;
-        if (wallet.balances[name]) {
-          const price = state.prices[name].price;
+      if (wallet.balances[name]) {
+        let price = 0;
+        if (state.prices[name]) { 
+          price = state.prices[name].price;
+        }
           const value = wallet.balances[name].total * price;
           totalValue.total += value;
           folio.value += value;
