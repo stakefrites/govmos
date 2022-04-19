@@ -115,7 +115,7 @@ const fetchPrices = async ({ commit, state }, chains) => {
 };
 
 
-const loadCache = async ({ commit, state, dispatch }) => { 
+const loadCache = async ({ commit, state, dispatch }) => {
   const prices = JSON.parse(localStorage.getItem("prices"));
   if (prices && prices.expire > Date.now()) {
     console.log("cahce is stil valid")
@@ -123,16 +123,20 @@ const loadCache = async ({ commit, state, dispatch }) => {
     commit("setIsPricesLoaded", true)
   }
   const images = JSON.parse(localStorage.getItem("images"));
-  if (images) { 
+  if (images) {
     commit("setImages", images);
   }
   const networks = JSON.parse(localStorage.getItem("networks"));
-  if (networks) { 
+  if (networks) {
     await dispatch("fetchNetworks", networks);
+  } else { 
+    commit("setIsConfigDone", false)
   }
   const seedAccounts = JSON.parse(localStorage.getItem("seedAccounts"));
-  if (seedAccounts) { 
+  if (seedAccounts) {
     commit("setAccounts", seedAccounts)
+  } else { 
+    commit("setIsConfigDone", false)
   }
   const balances = JSON.parse(localStorage.getItem("balances"));
   if (balances && balances.length >0 ) {
