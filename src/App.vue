@@ -27,7 +27,7 @@
         </v-app-bar-title>
       </template>
     </v-app-bar>
-    <v-container fluid >
+    <v-container >
       <LoadingSnack :isLoaded="isNetworksLoaded" what="networks"></LoadingSnack>
       <LoadingSnack :isLoaded="isPricesLoaded" what="prices"></LoadingSnack>
       <LoadingSnack :isLoaded="isBalancesLoaded" what="balances"></LoadingSnack>
