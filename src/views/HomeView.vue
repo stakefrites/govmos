@@ -1,7 +1,7 @@
 <template>
 
   <v-row>
-    <v-col md="12" sm="12" lg="6">
+    <v-col md="12" lg="6">
       <v-card  color="primary" v-if="balancesLoaded">
         <v-card-title>
           <strong>Total</strong>

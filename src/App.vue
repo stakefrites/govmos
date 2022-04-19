@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app full-height>
     <v-app-bar flat color="primary" dark>
       <template v-slot:prepend>
         <Logo />
@@ -27,16 +27,16 @@
         </v-app-bar-title>
       </template>
     </v-app-bar>
-    <v-container>
+    <v-container fluid >
       <LoadingSnack :isLoaded="isNetworksLoaded" what="networks"></LoadingSnack>
       <LoadingSnack :isLoaded="isPricesLoaded" what="prices"></LoadingSnack>
       <LoadingSnack :isLoaded="isBalancesLoaded" what="balances"></LoadingSnack>
-      <v-main>
+      <v-main class="body"> 
         <router-view />
       </v-main>
     </v-container>
-    <v-footer class="bg-primary">
-      <v-row justify="center" class="text-center" no-gutters>
+    <v-footer class="bg-primary footer" fixed bottom>
+      <v-row justify="center" class="text-center">
         <v-col>
           <v-btn variant="text" color="black" class="mx-1" xl> Trakmos </v-btn>
           <v-divider class="mx-1" vertical></v-divider>
@@ -117,6 +117,14 @@ export default {
 body {
   color: white;
   font-family: "Titillium Web", sans-serif;
+}
+.footer {
+   z-index:  1 !important;
+   margin-top: 100px !important;
+}
+
+.body {
+  margin-bottom: 120px !important;
 }
 
 </style>
