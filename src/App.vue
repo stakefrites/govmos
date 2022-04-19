@@ -16,8 +16,11 @@
           <v-chip class="mr-1"  to="/settings">
             <v-icon size="x-large"> mdi-account-cog </v-icon>
           </v-chip>
-           <v-chip class="mr-1"  @click="fetchBalances()">
+           <v-chip class="mr-1"  @click="refreshBalances()">
             <v-icon size="x-large"> mdi-refresh </v-icon>
+          </v-chip>
+          <v-chip class="mr-1"  @click="refreshPrices()">
+            <v-icon size="x-large"> mdi-currency-usd </v-icon>
           </v-chip>
           <v-chip v-if="keplr" @click="disconnectKeplr()">{{ excerptAddress(address) }}</v-chip>
           <v-chip @click="connectKeplr()" v-else>Connect Wallet</v-chip>
@@ -25,6 +28,9 @@
       </template>
     </v-app-bar>
     <v-container>
+      <LoadingSnack :isLoaded="isNetworksLoaded" what="networks"></LoadingSnack>
+      <LoadingSnack :isLoaded="isPricesLoaded" what="prices"></LoadingSnack>
+      <LoadingSnack :isLoaded="isBalancesLoaded" what="balances"></LoadingSnack>
       <v-main>
         <router-view />
       </v-main>
@@ -48,20 +54,22 @@
 <script>
 import Logo from "@/components/Logo.vue";
 import { mapActions, mapGetters } from "vuex";
+import LoadingSnack from "./components/LoadingSnack.vue";
 
 export default {
   name: "App",
 
   components: {
     Logo,
-  },
+    LoadingSnack
+},
   async created() {
-    await this.$store.dispatch("loadCache");
-    await this.$store.dispatch("fetchPortfolio");
-    if (!this.$store.state.isConfigDone) {
-      await this.$store.dispatch("fetchNetworks", this.$store.state.available);
+    await this.loadCache();
+    await this.fetchPortfolio();
+    if (!this.isConfigDone) {
+      await this.fetchNetworks(this.$store.state.available);
     } else {
-      await this.$store.dispatch("fetchNetworks", this.$store.state.networks);
+      await this.fetchNetworks(this.$store.state.networks);
     }
 
     await this.$store.dispatch("fetchAddress");
@@ -71,16 +79,26 @@ export default {
       address: "getAddress",
       keplr: "getKeplr",
       network: "getNetworkByName",
+      isConfigDone: "getIsConfigDone",
+       isBalancesLoaded : "getIsBalancesLoaded",
+      isPricesLoaded : "getIsPricesLoaded",
+      isNetworksLoaded : "getIsNetworksLoaded",
     }),
+  
+
   },
   methods: {
     ...mapActions({
       fetchPortfolio: "fetchPortfolio",
-      fetchBalances: "fetchBalances",
+      fetchAvailableNetworks: "fetchAvailableNetworks",
+      refreshBalances: "refreshBalances",
       fetchNetworks: "fetchNetworks",
       fetchAddress: "fetchAddress",
       disconnectKeplr: "disconnectKeplr",
       connectKeplr: "connectKeplr",
+      loadCache: "loadCache",
+      refreshPrices: "refreshPrices",
+  
     }),
     excerptAddress(address) {
       return address.substring(0, 10) + "..." + address.substring(address.length - 5);
@@ -88,7 +106,7 @@ export default {
   },
 
   data: () => ({
-    //
+    snackbar: true,
   }),
 };
 </script>
@@ -100,4 +118,5 @@ body {
   color: white;
   font-family: "Titillium Web", sans-serif;
 }
+
 </style>
