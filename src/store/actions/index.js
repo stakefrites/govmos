@@ -3,6 +3,9 @@ import axios from "axios";
 import Network from "@/utils/Network";
 import CosmosDirectory from "@/utils/CosmosDirectory";
 import { fromBech32, toBech32 } from "@cosmjs/encoding";
+import router from "../../router"
+
+
 
 const mapAsync = (array, fn) => {
   return Promise.all(array.map(fn));
@@ -116,21 +119,25 @@ const fetchPrices = async ({ commit, state }, chains) => {
 
 
 const loadCache = async ({ commit, state, dispatch }) => {
+  const networks = JSON.parse(localStorage.getItem("networks"));
+  if (networks) {
+    await dispatch("fetchNetworks", networks);
+    commit("setIsConfigDone", true)
+  } else { 
+    router.push("/")
+    commit("setIsConfigDone", false)
+  }
   const prices = JSON.parse(localStorage.getItem("prices"));
   if (prices && prices.expire > Date.now()) {
     console.log("cahce is stil valid")
     commit("setPrices", prices.prices);
     commit("setIsPricesLoaded", true)
+  } else { 
+    await dispatch("fetchPrices", state.networks)
   }
   const images = JSON.parse(localStorage.getItem("images"));
   if (images) {
     commit("setImages", images);
-  }
-  const networks = JSON.parse(localStorage.getItem("networks"));
-  if (networks) {
-    await dispatch("fetchNetworks", networks);
-  } else { 
-    commit("setIsConfigDone", false)
   }
   const seedAccounts = JSON.parse(localStorage.getItem("seedAccounts"));
   if (seedAccounts) {

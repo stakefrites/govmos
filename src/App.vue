@@ -6,8 +6,8 @@
       </template>
 
       <v-app-bar-title>
-        <div class="h4">
-          <b>Moscos</b>
+        <div>
+          <b>Trakmos</b>
         </div>
       </v-app-bar-title>
 
@@ -27,7 +27,7 @@
         </v-app-bar-title>
       </template>
     </v-app-bar>
-    <v-container >
+    <v-container class="width"  >
       <LoadingSnack :isLoaded="isNetworksLoaded" what="networks"></LoadingSnack>
       <LoadingSnack :isLoaded="isPricesLoaded" what="prices"></LoadingSnack>
       <LoadingSnack :isLoaded="isBalancesLoaded" what="balances"></LoadingSnack>
@@ -126,6 +126,10 @@ body {
 
 .body {
   margin-bottom: 120px !important;
+}
+
+.width {
+  max-width: 1000px !important;
 }
 
 </style>

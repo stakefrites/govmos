@@ -4,7 +4,9 @@
       <v-card>
         <v-card-header-text>
           <v-card-title>
-            <b>Configure your account</b>
+            <div class="text-h4 my-10">
+              <b>Setup your Trakmos folio</b>
+            </div>
           </v-card-title>
         </v-card-header-text>
         <v-expansion-panels v-model="flow.steps" v-if="networksLoaded">

@@ -1,7 +1,7 @@
 <template>
 
   <v-row>
-    <v-col md="12" lg="6">
+    <v-col md="12" lg="12">
       <v-card  color="primary" v-if="balancesLoaded">
         <v-card-title>
           <strong>Total</strong>
@@ -24,6 +24,21 @@
           </v-list-item>
         </v-list>
       </v-card>
+      <v-overlay :model-value="true" v-else class="align-center justify-center">
+        <v-card>
+          <v-card-title>
+          <strong>We are hard at work selecting the best pieces 🥩....</strong>
+        </v-card-title>
+        <v-card-subtitle class="mb-2">
+              <strong>Enjoy some 🍟 while we fetch your 🥩</strong>
+        </v-card-subtitle>
+        <v-card-text dropzone>
+          <v-progress-linear
+            indeterminate
+            color="primary"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+    </v-overlay>
     </v-col>
   </v-row>
   <v-row>
