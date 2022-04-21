@@ -142,12 +142,12 @@ export default {
     async save() {
       await this.saveAccounts(this.flow.accounts.fields);
       await this.saveNetworks(this.flow.networks.selected);
-      this.$router.push("/dashboard");
+      this.$router.push("/");
     },
   },
   async created() {
     if (this.isConfigDone) {
-      this.$router.push("/dashboard");
+      this.$router.push("/");
     }
     await this.fetchNetworks(this.$store.state.available);
   },
