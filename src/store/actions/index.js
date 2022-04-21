@@ -296,11 +296,9 @@ const resetCache = async ({ commit, dispatch, state }) => {
 
 
 const refreshPrices = async ({ commit, dispatch, state }) => { 
-  localStorage.removeItem("prices");
   dispatch("fetchPrices", state.networks)
 }
 const refreshBalances = async ({ commit, dispatch, state }) => { 
-  localStorage.removeItem("balances");
   dispatch("fetchBalances", state.networks)
 }
 
