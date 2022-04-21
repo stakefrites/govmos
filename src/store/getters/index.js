@@ -9,6 +9,9 @@ export default {
   getAvailableNetworks(state) { 
     return state.availableNetworks;
   },
+  getAvailable(state) { 
+    return state.available;
+  },
   getIsConfigDone(state) {
     return state.isConfigDone;
   },

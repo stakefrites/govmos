@@ -17,6 +17,10 @@
            <v-tooltip activator="parent" anchor="bottom">Change settings</v-tooltip>
             <v-icon size="x-large"> mdi-account-cog </v-icon>
           </v-chip>
+           <v-chip class="mr-1"  @click="fetchNetworks(available)">
+           <v-tooltip activator="parent" anchor="bottom">Connect to networks</v-tooltip>
+            <v-icon size="x-large"> mdi-wan </v-icon>
+          </v-chip>
            <v-chip class="mr-1"  @click="refreshBalances()">
              <v-tooltip activator="parent" anchor="bottom">Refresh all balances</v-tooltip>
             <v-icon size="x-large"> mdi-refresh </v-icon>
@@ -94,6 +98,7 @@ export default {
       isPricesLoaded : "getIsPricesLoaded",
       isNetworksLoaded : "getIsNetworksLoaded",
       isCacheLoaded: "getIsCacheLoaded",
+      available: "getAvailable",
     }),
   
 
@@ -108,7 +113,6 @@ export default {
       connectKeplr: "connectKeplr",
       loadCache: "loadCache",
       refreshPrices: "refreshPrices",
-  
     }),
     excerptAddress(address) {
       return address.substring(0, 10) + "..." + address.substring(address.length - 5);
