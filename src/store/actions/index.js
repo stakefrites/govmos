@@ -127,7 +127,7 @@ const loadCache = async ({ commit, state, dispatch }) => {
     commit("setSeedAccounts", seedAccounts)
   } else { 
     commit("setIsConfigDone", false);
-    router.push("/");
+    router.push("/select");
   }
   const networks = JSON.parse(localStorage.getItem("networks"));
   console.log("loading cache ----- Newtworks =>", networks)
@@ -135,7 +135,7 @@ const loadCache = async ({ commit, state, dispatch }) => {
     await dispatch("fetchNetworks", networks);
     commit("setIsConfigDone", true)
   } else { 
-    router.push("/")
+    router.push("/select")
     commit("setIsConfigDone", false)
   }
   const prices = JSON.parse(localStorage.getItem("prices"));
