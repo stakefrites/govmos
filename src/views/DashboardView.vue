@@ -2,19 +2,29 @@
 
   <v-row>
     <v-col md="12" lg="12">
-      <v-card  color="primary" v-if="balancesLoaded">
+      <v-card  color="primary" >
+        <v-overlay
+        :model-value="!balancesLoaded"
+        contained
+        class="align-center justify-center"
+      >
+        <v-card class="pa-4">
+          <v-card-title>
+            <strong>Loading balances 🥩</strong>
+          </v-card-title>
+          <v-progress-linear indeterminate color="primary"></v-progress-linear>
+          </v-card>
+      </v-overlay>
         <v-card-title>
-          <strong>Total</strong>
+          <strong class="text-h4">Summary</strong>
         </v-card-title>
         <v-card-subtitle class="mb-2">
-              <strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong>
+              Total value: <strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong>
         </v-card-subtitle>
         <v-list>
-          <v-list-item v-for="wallet in totalValue.wallets" :key="wallet.name">
+          <v-list-item active-class="deep-purple--text text--accent-4" v-for="wallet in totalValue.wallets" :key="wallet.name" :value="wallet.name">
             <v-list-item-content>
-              <v-list-item-title>
-                {{wallet.name}}
-              </v-list-item-title>
+              <v-list-item-title v-text="wallet.name"/>
               <v-list-item-subtitle>
                 <v-chip color="success">
                  <strong>{{parseFloat(wallet.value).toFixed(2)}} $</strong>
@@ -39,13 +49,14 @@
 import { mapGetters } from "vuex";
 import NetworkSummary from "@/components/NetworkSummary.vue";
 export default {
-  name: "HomeView",
+  name: "DashboardView",
   components: { NetworkSummary },
-  data() {},
+  data() {
+    return {
+      model: [],
+    }
+  },
   async created() {
-    /* if (!this.isConfigDone) {
-      this.$router.push("/");
-    } */
     await this.$store.dispatch("fetchNetworks", this.networks);
     await this.$store.dispatch("fetchAddress");
   },
