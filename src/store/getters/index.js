@@ -3,6 +3,9 @@ export default {
   getNetworks(state) {
     return state.networks;
   },
+  getSeedAccounts(state) { 
+    return state.seedAccounts;
+  },
   getAvailableNetworks(state) { 
     return state.availableNetworks;
   },

@@ -13,7 +13,7 @@ export default {
   addNetwork(state, network) {
     state.networks = _.uniqBy([...state.networks, network],"name")
   },
-  setAccounts(state, accounts) {
+  setSeedAccounts(state, accounts) {
     state.seedAccounts = accounts;
   },
   setPortfolio(state, portfolio) {

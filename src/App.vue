@@ -42,6 +42,21 @@
           <strong>Stake Frites (🥩 , 🍟)</strong>
         </v-col>
       </v-row>
+      <v-overlay :model-value="!isNetworksLoaded"  class="align-center justify-center">
+        <v-card>
+          <v-card-title>
+          <strong>We are hard at work selecting the best pieces 🥩....</strong>
+        </v-card-title>
+        <v-card-subtitle class="mb-2">
+              <strong>Enjoy some 🍟 while we fetch your 🥩</strong>
+        </v-card-subtitle>
+        <v-card-text dropzone>
+          <v-progress-linear
+            indeterminate
+            color="primary"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+    </v-overlay>
     </v-footer>
   </v-app>
 </template>
@@ -72,7 +87,7 @@ export default {
       keplr: "getKeplr",
       network: "getNetworkByName",
       isConfigDone: "getIsConfigDone",
-       isBalancesLoaded : "getIsBalancesLoaded",
+      isBalancesLoaded : "getIsBalancesLoaded",
       isPricesLoaded : "getIsPricesLoaded",
       isNetworksLoaded : "getIsNetworksLoaded",
       isCacheLoaded: "getIsCacheLoaded",

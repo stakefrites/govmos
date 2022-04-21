@@ -124,7 +124,7 @@ const loadCache = async ({ commit, state, dispatch }) => {
   const seedAccounts = JSON.parse(localStorage.getItem("seedAccounts"));
   console.log("loading cache ----- Seed Accounts =>", seedAccounts)
   if (seedAccounts) {
-    commit("setAccounts", seedAccounts)
+    commit("setSeedAccounts", seedAccounts)
   } else { 
     commit("setIsConfigDone", false);
     router.push("/");
@@ -197,7 +197,7 @@ const fetchAccounts = async ({ commit, state }) => {
   const seedAccounts = localStorage.getItem("seedAccounts");
   const decoded = JSON.parse(seedAccounts);
   if (decoded) {
-    commit("setAccounts", decoded);
+    commit("setSeedAccounts", decoded);
   }
 };
 
@@ -276,7 +276,7 @@ const castVote = async ({ commit, state }, vote) => {
 const saveAccounts = async ({ commit, state }, accounts) => {
   console.log("in saving account", accounts, state.networks);
   localStorage.setItem("seedAccounts", JSON.stringify(accounts));
-  commit("setAccounts", accounts);
+  commit("setSeedAccounts", accounts);
 };
 
 
