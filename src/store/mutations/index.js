@@ -46,6 +46,9 @@ export default {
   setIsNetworksLoaded(state, isLoaded) {
     state.isNetworksLoaded = isLoaded;
   },
+  setIsCacheLoaded(state, isLoaded) {
+    state.isCacheLoaded = isLoaded;
+  },
   setIsBalancesLoaded(state, isLoaded) {
     state.isBalancesLoaded = isLoaded;
   },

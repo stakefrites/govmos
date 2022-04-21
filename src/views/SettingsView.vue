@@ -7,12 +7,12 @@
   <v-col cols="12">
     <v-card color="primary">
       <v-card-header>
-        <v-card-title class="my-5">
+        <v-card-title class="my-1">
             <strong>Activated Networks</strong>
         </v-card-title>
       </v-card-header>
       <v-list three-line  >
-        <v-list-item  v-for="network in networks" :key="network.name" :prepend-avatar="image(network.name)">
+        <v-list-item  v-for="network in networks" :key="network.name" :prepend-avatar="network.image">
           <v-list-item-header>
             <v-list-item-title>{{ network.name }}</v-list-item-title>
           </v-list-item-header>
@@ -20,12 +20,12 @@
         </v-list-item>
       </v-list>
       <v-card-header>
-        <v-card-title class="my-5">
+        <v-card-title class="my-1">
             <strong>Add more networks</strong>
         </v-card-title>
       </v-card-header>
        <v-list three-line >
-        <v-list-item v-for="network in availableNetworks" :key="network.name"  :prepend-avatar="image(network.name)">
+        <v-list-item v-for="network in availableNetworks" :key="network.name"  :prepend-avatar="network.image">
           <v-list-item-header>
             <v-list-item-title>{{ network.name }}</v-list-item-title>
           </v-list-item-header>
@@ -36,27 +36,26 @@
   </v-col>
 </v-row>
 <v-row>
-  <v-col lg="6" md="12">
-  <v-card color="primary">
+  <v-col >
+  <v-card variant="outlined">
     <v-card-header>
         <v-card-title class="my-5">
             <strong>Wallets</strong>
         </v-card-title>
       </v-card-header>
-      <div v-for="wallet in portfolio" :key="wallet.name">
-      <v-card-header>
-       <v-card-title class="my-51">
-         <strong>{{wallet.name}}</strong>
-        </v-card-title>
-      </v-card-header>
-      <v-list>
+      <v-row>
+        <v-col v-for="wallet in portfolio" :key="wallet.name">
+        <v-list>
+          <v-list-subheader><div class="text-h4">{{wallet.name}}</div></v-list-subheader>
         <v-list-item v-for="address in wallet.addresses" :key="address">
-      <div >
-          <code  class="code"> {{excerptAddress(address)}}</code><br/>
-      </div>
-      </v-list-item>
+          <v-list-item-header>
+            <v-code class="code"> {{address}}</v-code><br/>
+          </v-list-item-header>
+        </v-list-item>
       </v-list>
-      </div>
+        </v-col>
+      </v-row>
+      
     </v-card>
     
 
@@ -66,7 +65,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import store from "../store";
 export default {
   name: "SettingsView",
   components: {  },
@@ -89,9 +87,6 @@ export default {
      goBack() {
       this.$router.go(-1);
     },
-    excerptAddress(address) {
-      return address.substring(0, 10) + "..." + address.substring(address.length - 10);
-    },
     ...mapActions({
       removeChain: "removeChain",
       addChain: "addChain"
@@ -104,4 +99,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.code {
+  background-color: #f5f5f5;
+  margin-bottom: -150px;
+}</style>

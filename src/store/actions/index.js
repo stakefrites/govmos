@@ -59,8 +59,8 @@ const fetchProposals = async ({ commit, state }) => {
 }
 
 const fetchBalances = async ({ commit, state }) => { 
+  console.log("fetching balances", state)
   commit("setIsBalancesLoaded", false);
-  console.log("getting balances...right?", state.isBalancesLoaded)
   let accounts = [];
   for (let account of state.seedAccounts) {
     const wallet = { name: account.name, addresses: [], balances: {} };
@@ -69,7 +69,7 @@ const fetchBalances = async ({ commit, state }) => {
       state.networks
     );
     wallet.balances = _.keyBy(folio, "name");
-    console.log("folio", folio);
+    console.log("folio", folio, );
     for (let network of state.networks) {
       let key = fromBech32(account.address);
       wallet.addresses.push(toBech32(network.prefix, key.data));
@@ -119,7 +119,18 @@ const fetchPrices = async ({ commit, state }, chains) => {
 
 
 const loadCache = async ({ commit, state, dispatch }) => {
+
+  console.log("loading cache -----", Date.now())
+  const seedAccounts = JSON.parse(localStorage.getItem("seedAccounts"));
+  console.log("loading cache ----- Seed Accounts =>", seedAccounts)
+  if (seedAccounts) {
+    commit("setAccounts", seedAccounts)
+  } else { 
+    commit("setIsConfigDone", false);
+    router.push("/");
+  }
   const networks = JSON.parse(localStorage.getItem("networks"));
+  console.log("loading cache ----- Newtworks =>", networks)
   if (networks) {
     await dispatch("fetchNetworks", networks);
     commit("setIsConfigDone", true)
@@ -128,41 +139,38 @@ const loadCache = async ({ commit, state, dispatch }) => {
     commit("setIsConfigDone", false)
   }
   const prices = JSON.parse(localStorage.getItem("prices"));
+  console.log("loading cache ----- Prices =>", prices)
   if (prices && prices.expire > Date.now()) {
-    console.log("cahce is stil valid")
     commit("setPrices", prices.prices);
     commit("setIsPricesLoaded", true)
   } else { 
     await dispatch("fetchPrices", state.networks)
   }
   const images = JSON.parse(localStorage.getItem("images"));
+  console.log("loading cache ----- Images =>", images)
   if (images) {
     commit("setImages", images);
   }
-  const seedAccounts = JSON.parse(localStorage.getItem("seedAccounts"));
-  if (seedAccounts) {
-    commit("setAccounts", seedAccounts)
-  } else { 
-    commit("setIsConfigDone", false)
-  }
+
   const balances = JSON.parse(localStorage.getItem("balances"));
+  console.log("loading cache ----- Balances =>", balances,balances && balances.length >0)
   if (balances && balances.length >0 ) {
-    console.log("loaded?")
     commit("setPortfolio", balances)
     commit("setIsBalancesLoaded", true)
   } else { 
     await dispatch("fetchBalances");
   }
   const availableNetworks = JSON.parse(localStorage.getItem("availables"));
+  console.log("loading cache ----- Availables =>", availableNetworks)
   if (availableNetworks) {
     commit("setAvailableNetworks", availableNetworks);
   } else { 
     await dispatch("fetchAvailableNetworks")
   }
- 
+ commit("setIsCacheLoaded", true)
 }
 
-const fetchPortfolio = async ({ commit, state, dispatch }) => {
+/* const fetchPortfolio = async ({ commit, state, dispatch }) => {
   console.log("fetch folio");
   await dispatch("fetchPreferred");
   await dispatch("fetchAccounts");
@@ -172,7 +180,7 @@ const fetchPortfolio = async ({ commit, state, dispatch }) => {
   } else {
     commit("setIsConfigDone", true);
   }
-};
+}; */
 
 
 const fetchPreferred = async ({ commit, state }) => {
@@ -320,7 +328,7 @@ export default {
   fetchNetworks,
   fetchProposals,
   fetchPrices,
-  fetchPortfolio,
+  //fetchPortfolio,
   fetchPreferred,
   fetchAccounts,
   fetchBalances,

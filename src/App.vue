@@ -37,12 +37,7 @@
     </v-container>
     <v-footer class="bg-primary footer" fixed bottom>
       <v-row justify="center" class="text-center">
-        <v-col>
-          <v-btn variant="text" color="black" class="mx-1" xl> Trakmos </v-btn>
-          <v-divider class="mx-1" vertical></v-divider>
-          <v-btn variant="text" color="black" class="mx-1" xl> Govmos </v-btn>
-        </v-col>
-        <v-col class="text-center text-white mt-4" cols="12">
+        <v-col class="text-center text-white my-4" cols="12">
           {{ new Date().getFullYear() }} —
           <strong>Stake Frites (🥩 , 🍟)</strong>
         </v-col>
@@ -63,13 +58,10 @@ export default {
     Logo,
     LoadingSnack
 },
-  async created() {
-    await this.loadCache();
-    await this.fetchPortfolio();
-    if (!this.isConfigDone) {
-      await this.fetchNetworks(this.$store.state.available);
+  async mounted() {
+    if (!this.isCacheLoaded) {
+      await this.loadCache();
     } else {
-      await this.fetchNetworks(this.$store.state.networks);
     }
 
     await this.$store.dispatch("fetchAddress");
@@ -83,13 +75,13 @@ export default {
        isBalancesLoaded : "getIsBalancesLoaded",
       isPricesLoaded : "getIsPricesLoaded",
       isNetworksLoaded : "getIsNetworksLoaded",
+      isCacheLoaded: "getIsCacheLoaded",
     }),
   
 
   },
   methods: {
     ...mapActions({
-      fetchPortfolio: "fetchPortfolio",
       fetchAvailableNetworks: "fetchAvailableNetworks",
       refreshBalances: "refreshBalances",
       fetchNetworks: "fetchNetworks",

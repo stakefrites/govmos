@@ -12,7 +12,7 @@
 
     <v-expansion-panel-text>
       <slot />
-      <v-btn flat v-if="last" to="/dsasdsa" @click="emit(stepName)"
+      <v-btn flat v-if="last" to="/dashboard" @click="emit(stepName)"
         >Finish</v-btn
       >
       <v-btn flat v-else @click="emit(stepName)">Next</v-btn>

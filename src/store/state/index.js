@@ -13,6 +13,7 @@ export default {
     { name: "sentinel" },
   ],
   images: {},
+  isCacheLoaded: false,
   isBalancesLoaded: false,
   isPricesLoaded: false,
   accounts: [],

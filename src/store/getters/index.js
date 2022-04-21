@@ -100,4 +100,7 @@ export default {
   getIsBalancesLoaded(state) {
     return state.isBalancesLoaded;
   },
+  getIsCacheLoaded(state) {
+    return state.isCacheLoaded;
+  },
 };

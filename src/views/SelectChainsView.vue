@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import Step from "@/components/Step.vue";
 export default {
   name: "SelectChainsView",
@@ -127,6 +127,11 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      saveAccounts: "saveAccounts",
+      saveNetworks: "saveNetworks",
+      fetchNetworks: "fetchNetworks",
+    }),
     addAccount() {
       this.flow.accounts.fields.push({ name: "", address: "" });
     },
@@ -135,15 +140,16 @@ export default {
       this.flow.steps = [this.flow[step].next];
     },
     async save() {
-      await this.$store.dispatch("saveNetworks", this.flow.networks.selected);
-      await this.$store.dispatch("saveAccounts", this.flow.accounts.fields);
+      await this.saveAccounts(this.flow.accounts.fields);
+      await this.saveNetworks(this.flow.networks.selected);
       this.$router.push("/dashboard");
     },
   },
-  created() {
+  async created() {
     if (this.isConfigDone) {
       this.$router.push("/dashboard");
     }
+    await this.fetchNetworks(this.$store.state.available);
   },
   computed: {
     ...mapGetters({
