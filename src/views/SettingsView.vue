@@ -1,5 +1,5 @@
 <template>
- <v-btn variant="default" color="primary" class="mb-3" @click="goBack()">
+ <v-btn variant="default" color="primary" class="mb-3" @click="goBack">
     <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
       Back
   </v-btn>

@@ -13,12 +13,11 @@
 
       <template v-slot:append>
         <v-app-bar-title>
-          <v-chip class="mr-1"  to="/settings">
-           <v-tooltip activator="parent" anchor="bottom">Change settings</v-tooltip>
+          <v-chip class="mr-1" to="/settings">
             <v-icon size="x-large"> mdi-account-cog </v-icon>
           </v-chip>
-           <v-chip class="mr-1"  @click="fetchNetworks(available)">
-           <v-tooltip activator="parent" anchor="bottom">Connect to networks</v-tooltip>
+          <v-chip class="mr-1"  @click="fetchNetworks(available)">
+            <v-tooltip activator="parent" anchor="bottom">Connect to networks</v-tooltip>
             <v-icon size="x-large"> mdi-wan </v-icon>
           </v-chip>
            <v-chip class="mr-1"  @click="refreshBalances()">
@@ -29,15 +28,12 @@
              <v-tooltip activator="parent" anchor="bottom">Refresh prices</v-tooltip>
             <v-icon size="x-large"> mdi-currency-usd </v-icon>
           </v-chip>
-          <v-chip v-if="keplr" @click="disconnectKeplr()">{{ excerptAddress(address) }}</v-chip>
-          <v-chip @click="connectKeplr()" v-else>Connect Wallet</v-chip>
         </v-app-bar-title>
       </template>
     </v-app-bar>
     <v-container class="width"  >
       <LoadingSnack :isLoaded="isNetworksLoaded" what="networks"></LoadingSnack>
       <LoadingSnack :isLoaded="isPricesLoaded" what="prices"></LoadingSnack>
-      <LoadingSnack :isLoaded="isBalancesLoaded" what="balances"></LoadingSnack>
       <v-main class="body"> 
         <router-view />
       </v-main>
