@@ -22,7 +22,7 @@
               Total value: <strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong>
         </v-card-subtitle>
         <v-list>
-          <v-list-item active-class="deep-purple--text text--accent-4" v-for="wallet in totalValue.wallets" :key="wallet.name" :value="wallet.name">
+          <v-list-item v-for="wallet in totalValue.wallets" :key="wallet.name" >
             <v-list-item-content>
               <v-list-item-title v-text="wallet.name"/>
               <v-list-item-subtitle>
