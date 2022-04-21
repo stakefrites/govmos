@@ -1,7 +1,13 @@
-# Vue 3 + Vite
+# [Trackmos](https:/trakmos.app)
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Trackmos allows cosmos magic tokens holder to view all their balances via a simple UI that either connects to one Keplr account of a simple text input.
 
-## Recommended IDE Setup
+Try it out at [trakmos.app](https://trakmos.app/).
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+## Disclaimer
+
+The initial version of Trakmos was built quickly. I'm personally not a React or Javascript developer, and this project leans extremely heavily on the [CosmJS project](https://github.com/cosmos/cosmjs) and other fantastic codebases like [Keplr Wallet](https://github.com/chainapsis/keplr-wallet), [Osmosis Zone frontend](https://github.com/osmosis-labs/osmosis-frontend) and [ Restake.app](https://github.com/eco-stake/restake). It functions very well and any attack surface is very limited however. Any contributions, suggestions and ideas from the community are extremely welcome.
+
+## Stake Frites (🥩 , 🍟)
+
+Stake Frites is an active validator, but we want to reduce pains and provide useful tools for the community. We built Trackmos to make it easy for all cosmonauts to easily access all their balances. [Delegate with us](https://stakefrites.co) to support more projects like this.
