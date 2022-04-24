@@ -1,4 +1,4 @@
-# [Trackmos](https:/trakmos.app)
+# [Trakmos](https:/trakmos.app)
 
 Trackmos allows cosmos magic tokens holder to view all their balances via a simple UI that either connects to one Keplr account of a simple text input.
 
