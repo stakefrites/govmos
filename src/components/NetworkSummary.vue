@@ -1,6 +1,6 @@
 <template>
   <v-col xs="12" sm="6" md="6">
-    <v-card variant="outlined" :loading="networksLoaded">
+    <v-card dark variant="outlined" :loading="networksLoaded">
       <v-card-title>
         <v-avatar size="50" class="mr-3">
           <img height="35" :src="image(network.name)" />
@@ -124,4 +124,5 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+</style>
