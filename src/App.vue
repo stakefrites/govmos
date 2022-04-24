@@ -16,10 +16,6 @@
           <v-chip class="mr-1" to="/settings">
             <v-icon size="x-large"> mdi-account-cog </v-icon>
           </v-chip>
-          <v-chip class="mr-1"  @click="fetchNetworks()">
-            <v-tooltip activator="parent" anchor="bottom">Connect to networks</v-tooltip>
-            <v-icon size="x-large"> mdi-wan </v-icon>
-          </v-chip>
            <v-chip class="mr-1"  @click="refreshBalances()">
              <v-tooltip activator="parent" anchor="bottom">Refresh all balances</v-tooltip>
             <v-icon size="x-large"> mdi-refresh </v-icon>
