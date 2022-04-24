@@ -4,10 +4,23 @@
       <v-card>
         <v-card-header-text>
           <v-card-title>
-            <div class="text-h4 my-10">
+            <div class="text-h4 mt-5">
               <b>Setup your Trakmos folio</b>
             </div>
           </v-card-title>
+          <v-alert    closable  type="info" class="ma-5" border>
+            <v-alert-title>
+              <div class="text-subtitle-1">How does it works?</div>
+              </v-alert-title>
+            <div class="text-body-2">
+            To setup your Trakmos folio, you need to add one (1) single address for each wallet (seed) you own. <br>
+            Trakmos will use Bech32 decoding and encoding to figure out all the other addresses linked to that wallet. <br><br>
+            <strong>Example: </strong>You have 1 account (We'll name it Personal) with tokens on Cosmos, Akash and Sifchain, and you have one other account (we'll name it Wifes) with tokens on Cosmos and Osmosis.<br><br>
+            In that scenario, at the "enter your wallets" step, you would click on the plus sign to enter your first wallet and then name the wallet "Personal" and in the address section you would only enter your cosmos address.<br>
+            You would then repeat the process for Wifes. <br><br>
+            This should be done for each wallet you own.
+            </div>
+          </v-alert>
         </v-card-header-text>
         <v-expansion-panels v-model="flow.steps" v-if="networksLoaded">
           <Step
@@ -43,7 +56,7 @@
           <Step
             :status="flow.accounts.done"
             :number="2"
-            name="Choose your accounts"
+            name="Enter your wallets"
             stepName="accounts"
             :handler="finishStep"
           >
