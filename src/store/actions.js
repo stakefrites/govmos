@@ -237,6 +237,8 @@ const refreshBalances = async ({ commit, dispatch, state }) => {
     if (Date.now() > expireTime) {
       dispatch("fetchBalances", state.networks.selected);
       localStorage.setItem("balanceExpireTime", new Date() + 1000 * 60 * 60);
+    } else {
+      commit("setIsBalancesLoaded", true);
     }
   }
 };
