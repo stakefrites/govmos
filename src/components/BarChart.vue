@@ -41,7 +41,7 @@ export default {
   components: { Doughnut },
   props: {
     results: {
-      type: Object,
+      type: Array,
       required: true,
     },
     chartId: {
@@ -67,19 +67,18 @@ export default {
   },
   mounted() {
     this.chartData.datasets = [{ data: this.dataSet }];
+    this.chartData.labels = this.labels;
     this.chartOptions = this.results.options;
     this.width = 100;
     this.height = 100;
   },
   computed: {
     dataSet() {
-      const { yes, no, noWithVeto, abstain } = this.results;
-      return [yes, no, noWithVeto, abstain].map((val) => parseInt(val));
+      return this.results.map((item) => item.value);
     },
-    yes() {
-      console.log(this.results.yes);
-      return parseInt(this.results.yes);
-    },
+    labels() {
+      return this.results.map(item => item.name);
+    }
   },
 
   data() {
@@ -87,15 +86,15 @@ export default {
       width: 100,
       height: 100,
       chartData: {
-        labels: ["Yes", "No", "No with veto", "Abstain"],
+        labels: [],
         datasets: [
           {
             data: [],
             backgroundColor: [
-              "#4CAF50",
-              "#B00020",
-              "rgb(255, 25, 12)",
-              "rgb(54, 162, 235)",
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56",
+              "#36A2EB",
             ],
           },
         ],
