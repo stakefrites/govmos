@@ -85,4 +85,10 @@ export default {
   getIsBalancesLoaded(state) {
     return state.loaded.isBalancesLoaded;
   },
+  getOnboardingAlert(state) {
+    return state.alerts.onboarding;
+  },
+  getDashboardAlert(state) {
+    return state.alerts.dashboard;
+  },
 };

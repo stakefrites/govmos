@@ -37,6 +37,12 @@ export default {
   setIsBalancesLoaded(state, isLoaded) {
     state.loaded.isBalancesLoaded = isLoaded;
   },
+  setOnbordingAlert(state, isDisplayed) {
+    state.alerts.onboarding = isDisplayed;
+  },
+  setDashboardAlert(state, isDisplayed) {
+    state.alerts.dashboard = isDisplayed;
+  },
   setImage(state, { name, image }) {
     state.networks.images[name] = image;
   },

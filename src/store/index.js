@@ -27,6 +27,10 @@ const state = () => {
       isPricesLoaded: false,
       isNetworksLoaded: false,
     },
+    alerts: {
+      onboarding: true,
+      dashboard: true,
+    },
     portfolio: {
       seedAddresses: [],
       wallets: [],
