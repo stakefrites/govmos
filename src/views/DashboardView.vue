@@ -8,7 +8,7 @@
         contained
         class="align-center justify-center"
       >
-        <v-card class="pa-4">
+        <v-card dark class="pa-4">
           <v-card-title>
             <strong>Loading balances 🥩</strong>
           </v-card-title>

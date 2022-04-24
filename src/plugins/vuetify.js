@@ -6,14 +6,28 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 
 const myCustomLightTheme = {
-  dark: true,
+  dark: false,
   colors: {
-    background: "#FFFFFF",
-    surface: "#FFFFFF",
+    background: "#EFEFEF",
+    surface: "#EFEFEF",
     primary: "#F26D78",
     secondary: "#03DAC6",
     error: "#B00020",
-    info: "#2196F3",
+    info: "#226CE0",
+    success: "#4CAF50",
+    warning: "#FB8C00",
+  },
+};
+
+const myDarkTheme = {
+  dark: true,
+  colors: {
+    background: "#392F2F",
+    surface: "#392F2F",
+    primary: "#F26D78",
+    secondary: "#03DAC6",
+    error: "#B00020",
+    info: "#226CE0",
     success: "#4CAF50",
     warning: "#FB8C00",
   },
@@ -24,7 +38,10 @@ export default createVuetify(
   {
     theme: {
       defaultTheme: "myCustomLightTheme",
-      themes: { myCustomLightTheme },
+      themes: {
+        myCustomLightTheme,
+        myDarkTheme,
+      },
     },
   }
 );

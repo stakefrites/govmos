@@ -1,5 +1,5 @@
 <template>
-  <v-app full-height>
+  <v-app :theme="theme" full-height>
     <v-app-bar flat color="primary" dark>
       <template v-slot:prepend>
         <Logo />
@@ -23,6 +23,10 @@
           <v-chip class="mr-1"  @click="refreshPrices()">
              <v-tooltip activator="parent" anchor="bottom">Refresh prices</v-tooltip>
             <v-icon size="x-large"> mdi-currency-usd </v-icon>
+          </v-chip>
+           <v-chip class="mr-1"  @click="toggleDarkTheme()">
+             <v-tooltip activator="parent" anchor="bottom">Toggle night mode</v-tooltip>
+            <v-icon size="x-large"> mdi-weather-night </v-icon>
           </v-chip>
         </v-app-bar-title>
       </template>
@@ -79,6 +83,7 @@ export default {
     this.fetchNetworks();
     this.refreshPrices();
     this.refreshBalances();
+
   },
   computed: {
     ...mapGetters({
@@ -103,11 +108,15 @@ export default {
     }),
     excerptAddress(address) {
       return address.substring(0, 10) + "..." + address.substring(address.length - 5);
-    }
+    },
+    toggleDarkTheme() {
+     this.theme = this.theme === 'myCustomLightTheme' ? 'myDarkTheme' : 'myCustomLightTheme'
+    },
   },
 
   data: () => ({
     snackbar: true,
+    theme: "myCustomLightTheme",
   }),
 };
 </script>
@@ -116,7 +125,6 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Fredoka&family=Titillium+Web:wght@200;700&display=swap");
 
 body {
-  color: white;
   font-family: "Titillium Web", sans-serif;
 }
 .footer {

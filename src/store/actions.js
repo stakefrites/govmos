@@ -232,7 +232,13 @@ const refreshPrices = async ({ commit, dispatch, state }) => {
   dispatch("fetchPrices", state.networks.selected);
 };
 const refreshBalances = async ({ commit, dispatch, state }) => {
-  dispatch("fetchBalances", state.networks);
+  const expireTime = localStorage.getItem("balanceExpireTime");
+  if (expireTime) {
+    if (Date.now() > expireTime) {
+      dispatch("fetchBalances", state.networks.selected);
+      localStorage.setItem("balanceExpireTime", new Date() + 1000 * 60 * 60);
+    }
+  }
 };
 
 const removeChain = async ({ commit, dispatch, state }, network) => {
