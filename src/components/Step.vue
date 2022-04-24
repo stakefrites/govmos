@@ -5,17 +5,17 @@
         <b>{{ number }}</b>
       </v-chip>
       {{ name }}
-      <template v-slot:actions>
-        <v-icon :color="color" :icon="icon"> </v-icon>
+      <template #actions>
+        <v-icon :color="color" :icon="showedIcon"> </v-icon>
       </template>
     </v-expansion-panel-title>
 
     <v-expansion-panel-text>
       <slot />
-      <v-btn flat v-if="last" to="/dashboard" @click="emit(stepName)"
+      <v-btn v-if="last" flat to="/dashboard" @click="emit(stepName)"
         >Finish</v-btn
       >
-      <v-btn flat v-else @click="emit(stepName)">Next</v-btn>
+      <v-btn  v-else flat @click="emit(stepName)">Next</v-btn>
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -23,7 +23,6 @@
 <script>
 export default {
   name: "Step",
-  data: () => ({}),
   props: {
     name: String,
     number: Number,
@@ -34,17 +33,18 @@ export default {
     handler: { type: Function },
     last: Boolean,
   },
-  methods: {
-    emit(stepName) {
-      this.handler(stepName);
-    },
-  },
-  computed: {
-    icon() {
+  data: () => ({}),
+   computed: {
+    showedIcon() {
       return this.status ? "mdi-checkbox-marked-circle" : "mdi-alert-circle";
     },
     color() {
       return this.status ? "green" : "red";
+    },
+  },
+  methods: {
+    emit(stepName) {
+      this.handler(stepName);
     },
   },
 };

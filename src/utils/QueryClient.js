@@ -261,7 +261,7 @@ const QueryClient = async (chainId, rpcUrls, restUrls) => {
 
       let liquid;
       try {
-        liquid = await await client.bank.allBalances(chainAddress);
+        liquid = await client.bank.allBalances(chainAddress);
       } catch (error) {
         console.log("Error in all balances", error);
         liquid = { delegationResponses: [] };

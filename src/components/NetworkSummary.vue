@@ -36,18 +36,6 @@
                   <td><strong>Symbol</strong></td>
                   <td>${{ network.symbol }}</td>
                 </tr>
-                <tr v-if="proposalsLoaded">
-                  <td><strong># Proposals</strong></td>
-                  <td>{{ proposals(network.name).length }}</td>
-                </tr>
-                <tr v-else>
-                  <td colspan="2">
-                    <v-progress-linear
-                      indeterminate
-                      color="primary"
-                    ></v-progress-linear>
-                  </td>
-                </tr>
               </tbody>
               <tbody v-else>
                 <tr>
@@ -65,7 +53,7 @@
         <v-expansion-panel elevation="0">
           <v-expansion-panel-title>Balances</v-expansion-panel-title>
           <v-expansion-panel-text>
-            <v-table density="compact" v-if="balancesLoaded">
+            <v-table v-if="balancesLoaded" density="compact" >
               <tbody>
                 <tr>
                   <td><strong>Total</strong></td>
@@ -105,19 +93,6 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
-      <v-card-actions>
-        <v-btn v-if="proposalsLoaded" :to="`/proposals/${network.name}`"
-          >View Proposals</v-btn
-        >
-        <v-btn disabled v-if="balancesLoaded" :to="`/balances/${network.name}`"
-          >View Balances</v-btn
-        >
-        <v-progress-linear
-          v-else
-          indeterminate
-          color="primary"
-        ></v-progress-linear>
-      </v-card-actions>
     </v-card>
   </v-col>
 </template>
@@ -133,20 +108,18 @@ export default {
     },
   },
   data: () => ({ apy: 0 }),
-  methods: {},
   async created() {},
+  methods: {},
   computed: {
     ...mapGetters({
       networksLoaded: "getIsNetworksLoaded",
-      proposalsLoaded: "getIsProposalsLoaded",
       pricesLoaded: "getIsPricesLoaded",
       balancesLoaded: "getIsBalancesLoaded",
-      proposals: "getProposalsByName",
       balances: "getBalancesByName",
       price: "getPriceByName",
-      image: "getImageByName"
+      image: "getImageByName",
     }),
-  },
+  }
 };
 </script>
 

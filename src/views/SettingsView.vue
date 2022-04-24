@@ -12,7 +12,7 @@
         </v-card-title>
       </v-card-header>
       <v-list three-line  >
-        <v-list-item  v-for="network in networks" :key="network.name" :prepend-avatar="network.image">
+        <v-list-item  v-for="network in selectedNetworks" :key="network.name" :prepend-avatar="network.image">
           <v-list-item-header>
             <v-list-item-title>{{ network.name }}</v-list-item-title>
           </v-list-item-header>
@@ -46,7 +46,7 @@
         </v-card-title>
       </v-card-header>
       <v-row>
-        <v-col v-for="wallet in portfolio" :key="wallet.name">
+        <v-col v-for="wallet in wallets" :key="wallet.name">
         <v-list>
           <v-list-subheader><div class="text-h4">{{wallet.name}}</div></v-list-subheader>
         <v-list-item v-for="address in wallet.addresses" :key="address">
@@ -70,7 +70,7 @@
     <v-card-title class="my-5">
       <strong>Add a new wallet</strong>
 </v-card-title>
-<v-card-text><AddWalletForm :handler="closeModal" :seedAccounts="seedAccounts"></AddWalletForm></v-card-text>
+<v-card-text><AddWalletForm :handler="closeModal" :seedAccounts="seedAddresses"></AddWalletForm></v-card-text>
     </v-card>
     </v-overlay>
 </template>
@@ -88,12 +88,11 @@ export default {
   },
   computed: {
      ...mapGetters({
-      portfolio: "getPortfolio",
-      networks: "getNetworks",
+      wallets: "getWallets",
+      selectedNetworks: "getSelectedNetworks",
       availableNetworks: "getAvailableNetworks",
       networksLoaded: "getIsNetworksLoaded",
-      image: "getImageByName",
-        seedAccounts: "getSeedAccounts",
+      seedAddresses: "getSeedAddresses",
     }),
   },
   methods: {

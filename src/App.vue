@@ -16,7 +16,7 @@
           <v-chip class="mr-1" to="/settings">
             <v-icon size="x-large"> mdi-account-cog </v-icon>
           </v-chip>
-          <v-chip class="mr-1"  @click="fetchNetworks(available)">
+          <v-chip class="mr-1"  @click="fetchNetworks()">
             <v-tooltip activator="parent" anchor="bottom">Connect to networks</v-tooltip>
             <v-icon size="x-large"> mdi-wan </v-icon>
           </v-chip>
@@ -76,32 +76,27 @@ export default {
     Logo,
     LoadingSnack
 },
-  async mounted() {
-    if (!this.isCacheLoaded) {
-      await this.loadCache();
-    } else {
-    }
-
-    await this.$store.dispatch("fetchAddress");
+  beforeCreate() {
+		this.$store.commit('initialiseStore');
+	},
+  created() {
+    this.fetchNetworks();
+    this.refreshPrices();
+    this.refreshBalances();
   },
   computed: {
     ...mapGetters({
-      address: "getAddress",
-      keplr: "getKeplr",
       network: "getNetworkByName",
-      isConfigDone: "getIsConfigDone",
       isBalancesLoaded : "getIsBalancesLoaded",
       isPricesLoaded : "getIsPricesLoaded",
       isNetworksLoaded : "getIsNetworksLoaded",
       isCacheLoaded: "getIsCacheLoaded",
-      available: "getAvailable",
     }),
-  
-
   },
   methods: {
     ...mapActions({
       fetchAvailableNetworks: "fetchAvailableNetworks",
+      fetchNetworks: "fetchNetworks",
       refreshBalances: "refreshBalances",
       fetchNetworks: "fetchNetworks",
       fetchAddress: "fetchAddress",

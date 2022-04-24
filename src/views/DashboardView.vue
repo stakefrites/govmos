@@ -38,7 +38,7 @@
   </v-row>
   <v-row>
     <NetworkSummary
-      v-for="network in networks"
+      v-for="network in selectedNetworks"
       :key="network.name"
       :network="network"
     ></NetworkSummary>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import NetworkSummary from "@/components/NetworkSummary.vue";
 export default {
   name: "DashboardView",
@@ -57,19 +57,20 @@ export default {
     }
   },
   async created() {
-    await this.$store.dispatch("fetchNetworks", this.networks);
-    await this.$store.dispatch("fetchAddress");
+
+  },
+  methods: {
+    ...mapActions({
+      fetchNetworks: "fetchNetworks",
+    }),
   },
   computed: {
     ...mapGetters({
-      networks: "getNetworks",
+      selectedNetworks: "getSelectedNetworks",
       totalValue: "getTotalValue",
-      networksLoaded: "getIsNetworksLoaded",
-      proposalsLoaded: "getIsProposalsLoaded",
-      balancesLoaded: "getIsBalancesLoaded",
-      proposals: "getProposalsByName",
       balances: "getBalancesByName",
-      portfolio: "getPortfolio",
+      networksLoaded: "getIsNetworksLoaded",
+      balancesLoaded: "getIsBalancesLoaded",
     }),
   },
 };

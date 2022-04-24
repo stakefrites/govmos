@@ -33,7 +33,7 @@
                       hide-details
                       density="compact"
                       v-model="flow.networks.selected"
-                      :value="network.name"
+                      :value="network"
                     />
                   </div>
                 </v-list-item>
@@ -131,6 +131,8 @@ export default {
       saveAccounts: "saveAccounts",
       saveNetworks: "saveNetworks",
       fetchNetworks: "fetchNetworks",
+      fetchBalances: "fetchBalances",
+      refreshPrices: "refreshPrices",
     }),
     addAccount() {
       this.flow.accounts.fields.push({ name: "", address: "" });
@@ -142,29 +144,30 @@ export default {
     async save() {
       await this.saveAccounts(this.flow.accounts.fields);
       await this.saveNetworks(this.flow.networks.selected);
+      this.refreshPrices();
+      this.fetchBalances();
+
       this.$router.push("/");
     },
   },
   async created() {
-    if (this.isConfigDone) {
-      this.$router.push("/");
-    }
-    await this.fetchNetworks(this.$store.state.available);
+    await this.fetchNetworks();
+    this.flow.networks.selected = this.selectedNetworks;
+    this.flow.accounts.fields = this.seedAddresses;
   },
   computed: {
     ...mapGetters({
-      networks: "getNetworks",
+      networks: "getAllNetworks",
+      selectedNetworks: "getSelectedNetworks",
       networksLoaded: "getIsNetworksLoaded",
-      proposalsLoaded: "getIsProposalsLoaded",
-      proposals: "getProposalsByName",
-      isConfigDone: "getIsConfigDone",
+      seedAddresses: "getSeedAddresses",
     }),
     icon() {
       return this.networksLoaded
         ? "mdi-checkbox-marked-circle-outline"
         : "mdi-alert-circle";
     },
-  },
+  }
 };
 </script>
 
