@@ -44,7 +44,6 @@ const mapAsync = (array, fn) => {
 };
 
 const getAddress = (seed, chain) => {
-  console.log(seed, chain);
   const { prefix } = chain;
   const bech = fromBech32(seed);
 

@@ -57,7 +57,9 @@ export default {
     }
   },
   async created() {
-
+    if (this.seedAddresses.length === 0 || this.selectedNetworks.length === 0) {
+      this.$router.push("/select");
+    }
   },
   methods: {
     ...mapActions({
@@ -71,6 +73,7 @@ export default {
       balances: "getBalancesByName",
       networksLoaded: "getIsNetworksLoaded",
       balancesLoaded: "getIsBalancesLoaded",
+      seedAddresses : "getSeedAddresses",
     }),
   },
 };
