@@ -2,7 +2,7 @@
 
   <v-row>
     <v-col md="12" lg="12">
-      <v-card  color="primary" >
+      <v-card  variant="outlined" >
         <v-overlay
         :model-value="!balancesLoaded"
         contained
@@ -15,24 +15,35 @@
           <v-progress-linear indeterminate color="primary"></v-progress-linear>
           </v-card>
       </v-overlay>
-        <v-card-title>
-          <strong class="text-h4">Summary</strong>
-        </v-card-title>
-        <v-card-subtitle class="mb-2">
-              Total value: <strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong>
+        <br>
+        <v-card-subtitle>
+          <h4>Total balance</h4>
         </v-card-subtitle>
-        <v-list>
-          <v-list-item v-for="wallet in totalValue.wallets" :key="wallet.name" >
-            <v-list-item-content>
-              <v-list-item-title v-text="wallet.name"/>
-              <v-list-item-subtitle>
-                <v-chip color="success">
-                 <strong>{{parseFloat(wallet.value).toFixed(2)}} $</strong>
-                </v-chip>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <v-card-title><strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong></v-card-title>
+        <v-row class="my-10">
+          <v-col>
+             <div class="d-flex flex-column align-center">
+              <div class="text-h5 mb-5">Value by wallet</div>
+              <PieChart :results="totalValue.wallets"></PieChart>
+          </div>
+          </v-col>
+         <!--  <v-col>
+             <div class="d-flex flex-column align-center">
+              <div class="text-h5 mb-5">Value by token</div>
+              <PieChart :results="totalValue.wallets"></PieChart>
+          </div>
+          </v-col> -->
+        </v-row>
+        <div class="d-flex justify-space-around">
+        <v-card class="pa-4 ma-5"  v-for="wallet in totalValue.wallets" :key="wallet.name">
+          <v-card-header>
+            <v-card-title>{{wallet.name}}</v-card-title>
+          </v-card-header>
+          <v-card-text>
+            <strong>{{parseFloat(wallet.value).toFixed(2)}} $</strong>
+          </v-card-text>
+        </v-card>
+        </div>
       </v-card>
     </v-col>
   </v-row>
@@ -48,9 +59,10 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import NetworkSummary from "@/components/NetworkSummary.vue";
+import PieChart from "@/components/BarChart.vue";
 export default {
   name: "DashboardView",
-  components: { NetworkSummary },
+  components: { NetworkSummary, PieChart },
   data() {
     return {
       model: [],
@@ -60,6 +72,7 @@ export default {
     if (this.seedAddresses.length === 0 || this.selectedNetworks.length === 0) {
       this.$router.push("/select");
     }
+    console.log(this.totalValue)
   },
   methods: {
     ...mapActions({
