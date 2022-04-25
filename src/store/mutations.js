@@ -65,7 +65,7 @@ export default {
     if (localStorage.getItem("store")) {
       // Replace the state object with the stored item
       if (store.version == version) {
-        this.replaceState(Object.assign(state, store));
+        this.replaceState(Object.assign(state, localStorage.getItem("store")));
       } else {
         state.version = version;
       }
