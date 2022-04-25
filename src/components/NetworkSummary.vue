@@ -60,7 +60,6 @@ export default {
   data: () => ({ apy: 0,
   selected: "denom" }),
   async created() {
-    console.log(this.price(this.network.name));
   },
   methods: {},
   computed: {
