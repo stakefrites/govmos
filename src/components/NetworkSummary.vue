@@ -1,6 +1,6 @@
 <template>
 <!-- NEW network info vue -->
-  <v-col xs="12" sm="6" md="4" lg="4">
+  <v-col xs="12" sm="6" md="4" lg="4" xl="4">
     <v-card dark variant="outlined" class="rounded-lg" :loading="networksLoad">
       <v-card-title>
         <v-avatar size="50" class="mr-3">
@@ -18,26 +18,27 @@
       <v-divider></v-divider>
       <v-card-text class="mt-3 mb-3">
         <div class="d-flex justify-space-between">
-          <div>Available</div>
+          <div class="cardtext_row cardtext_row_title">Available</div>
           <div class="vcard_dot"></div>
           <div>{{liquid}}</div>
         </div>
         <div class="d-flex justify-space-between">
-          <div class="">Staked</div>
+          <div class="cardtext_row cardtext_row_title">Staked</div>
           <div class="vcard_dot"></div>
           <div>{{staked}}</div>
         </div>
         <div class="d-flex justify-space-between">
-          <div class="">Rewards</div>
+          <div class="cardtext_row cardtext_row_title">Rewards</div>
           <div class="vcard_dot"></div>
-          <div>{{ rewards}}</div>
+          <div class="cardtext_row cardtext_row_var">{{ rewards }}</div>
         </div>
       </v-card-text>
       <v-divider></v-divider>
-      <v-card-actions class="vcard_action d-flex justify-space-between">
-        <!-- <v-btn class="vcard_action_btn" text>See More</v-btn> -->
-        <div>🥩 🍟</div>
-        <v-btn v-if="balancesLoaded" class="vcard_action_btn" text><div class="text-body-1">{{ total}}</div></v-btn>
+      <v-card-actions class="vcard_action d-flex justify-space-evenly">
+        <!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
+        <div class="text-h6">🥩 🍟</div>
+        <v-divider vertical></v-divider>
+        <div class="vcard_action_btn_left font-weight-bold">{{total}}</div>
       </v-card-actions>
     </v-card>
   </v-col>
@@ -121,4 +122,10 @@ export default {
   background-color: #fff;
   color: rgb(242,109,120);
 } */
+.cardtext_row {
+  color: #000;
+}
+.vcard_action_icon {
+  color: #00000099;
+}
 </style>
