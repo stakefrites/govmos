@@ -27,6 +27,7 @@ const state = () => {
       all: [],
       prices: {},
       images: {},
+      apr: {},
     },
     loaded: {
       isBalancesLoaded: false,

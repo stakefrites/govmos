@@ -49,6 +49,9 @@ export default {
   setImage(state, { name, image }) {
     state.networks.images[name] = image;
   },
+  setApr(state, { name, apr }) {
+    state.networks.apr[name] = apr;
+  },
   setImages(state, images) {
     state.networks.images = images;
   },

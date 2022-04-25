@@ -4,6 +4,7 @@ import Network from "@/utils/Network";
 import CosmosDirectory from "@/utils/CosmosDirectory";
 import { fromBech32, toBech32 } from "@cosmjs/encoding";
 import QueryClient from "../utils/QueryClient";
+import ApyClient from "../utils/ApyClient";
 import router from "@/router";
 import {
   setupStakingExtension,
@@ -48,6 +49,19 @@ const getAddress = (seed, chain) => {
   const bech = fromBech32(seed);
 
   return toBech32(prefix, bech.data);
+};
+
+const fetchApr = async ({ commit, state, dispatch }) => {
+  for (let chain of state.networks.selected) {
+    let apr = 0;
+    try {
+      const client = ApyClient(chain, chain.rpcUrl, chain.restUrl);
+      apr = await client.getApy();
+    } catch (error) {
+      console.log(error);
+    }
+    commit("setApr", { name: chain.name, apr });
+  }
 };
 
 const fetchAvailableNetworks = async ({ commit, state, dispatch }) => {
@@ -100,6 +114,7 @@ const fetchBalances = async ({ commit, state }) => {
   commit("setIsBalancesLoaded", false);
   let accounts = [];
   for (let account of state.portfolio.seedAddresses) {
+    console.log("account", account);
     const address = account.address;
     const wallet = { name: account.name, addresses: [], balances: {} };
     const selected = state.networks.selected;
@@ -219,13 +234,20 @@ const refreshBalances = async ({ commit, dispatch, state }) => {
   console.log(expireTime);
   if (expireTime) {
     if (Date.now() > expireTime) {
-      dispatch("fetchBalances", state.networks.selected);
+      await dispatch("fetchBalances", state.networks.selected);
+      commit("setIsBalancesLoaded", true);
       localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
     } else {
+      if (state.portfolio.wallets.length == 0) {
+        await dispatch("fetchBalances", state.networks.selected);
+        commit("setIsBalancesLoaded", true);
+        localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
+      }
       commit("setIsBalancesLoaded", true);
     }
   } else {
-    dispatch("fetchBalances", state.networks.selected);
+    await dispatch("fetchBalances", state.networks.selected);
+    commit("setIsBalancesLoaded", true);
     localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
   }
 };
@@ -257,6 +279,7 @@ const saveCurrency = async ({ commit, state, dispatch }, currency) => {
 export default {
   fetchAvailableNetworks,
   fetchNetworks,
+  fetchApr,
   fetchPrices,
   fetchBalances,
   saveAccounts,

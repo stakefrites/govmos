@@ -24,6 +24,9 @@ export default {
   getImageByName: (state) => (name) => {
     return state.networks.images[name];
   },
+  getAprByName: (state) => (name) => {
+    return state.networks.apr[name];
+  },
   getPriceByName: (state) => (name) => {
     if (state.networks.prices[name]) {
       return state.networks.prices[name].prices[state.currency.value];
