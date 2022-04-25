@@ -19,92 +19,18 @@
       :network="network"
     ></NetworkSummary>
   </v-row>
-  <v-row>
-    <v-col md="12" lg="12">
-          <DashboardSummary>
-            <!-- 
-              <v-col>
-            <div class="d-flex flex-column align-center">
-              <div class="text-h5 mb-5">Value by wallet</div>
-              <div class="d-flex">
-              <slot></slot>
-              </div>
-            </div>
-          </v-col>
-              <PieChart :results="totalValue.wallets"></PieChart>
-            </div> -->
-          </DashboardSummary>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col lg="12" v-for="wallet in totalValue.wallets" :key="wallet.name">
-  <v-card  variant="outlined" >
-        <v-card-header>
-          <v-card-subtitle><div class="text-h5">{{wallet.name}}</div></v-card-subtitle>
-        </v-card-header>
-                <div class="d-flex justify-space-around">
-                  <v-row>
-          <v-col lg="3" sm="6">
-         <div class="mx-5 mr-10">
-          <v-card flat class="px-3 py-6">
-          <v-card-subtitle>
-            <div class="text-h4">Total</div>
-          </v-card-subtitle>
-          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.value).toFixed(2)}} $</strong></div></v-card-title>
-          </v-card>
-        </div>
-        </v-col>
-        <v-divider class="my-6" vertical></v-divider>
-        <v-col lg="3" sm="6">
-        <div class="mx-2">
-          <v-card flat class="px-3 py-6">
-          <v-card-subtitle>
-            <div class="text-h4">Staked</div>
-          </v-card-subtitle>
-          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.staked).toFixed(2)}}</strong></div></v-card-title>
-          </v-card>
-        </div> 
-        </v-col>
-        <v-divider class="my-6" vertical></v-divider>
-        <v-col lg="3" sm="6">
-        <div class="mx-2">
-<v-card flat class="px-3 py-6">
-          <v-card-subtitle>
-            <div class="text-h4">Rewards</div>
-          </v-card-subtitle>
-          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.rewards).toFixed(2)}} $</strong></div></v-card-title>
-          </v-card>
-        </div>
-        </v-col>
-        
-        <v-divider class="my-6" vertical></v-divider>
-        <v-col lg="3" sm="6">
-         <div class="mx-2">
-<v-card flat class="px-3 py-6">
-          <v-card-subtitle>
-            <div class="text-h4">Liquid</div>
-          </v-card-subtitle>
-          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.liquid).toFixed(2)}} $</strong></div></v-card-title>
-          </v-card>
-        </div>
-        </v-col>
-        </v-row>
-        </div>
-        
-
-      </v-card>
-      </v-col>
-  </v-row>
+  <AmountsCard name="All Accounts" isTotal/>
+  <AmountsCard v-for="wallet in totalValue.wallets" :key="wallet.name" :name="wallet.name" :wallet="wallet"/>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import NetworkSummary from "@/components/NetworkSummary.vue";
 import PieChart from "@/components/BarChart.vue";
-import DashboardSummary from "@/components/DashboardSummary.vue";
+import AmountsCard from "@/components/AmountsCard.vue";
 export default {
   name: "DashboardView",
-  components: { NetworkSummary, PieChart, DashboardSummary },
+  components: { NetworkSummary, PieChart, AmountsCard },
   data() {
     return {
       model: [],
