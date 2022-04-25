@@ -123,7 +123,7 @@ export default {
   color: rgb(242,109,120);
 } */
 .cardtext_row {
-  color: #000;
+  
 }
 .vcard_action_icon {
   color: #00000099;

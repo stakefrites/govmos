@@ -22,8 +22,8 @@ const myCustomLightTheme = {
 const myDarkTheme = {
   dark: true,
   colors: {
-    background: "#392F2F",
-    surface: "#392F2F",
+    background: "#121212",
+    surface: "#121212",
     primary: "#F26D78",
     secondary: "#03DAC6",
     error: "#B00020",

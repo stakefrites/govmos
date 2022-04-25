@@ -1,5 +1,5 @@
 <template>
-<v-alert closable v-model="showAlert" type="info" class="my-5" border>
+<v-alert type="info" class="my-5" border>
             <v-alert-title>
               <div class="text-subtitle-1">Quick pointers</div>
               </v-alert-title>
