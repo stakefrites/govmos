@@ -91,12 +91,29 @@
           <Step
             :status="flow.networks.done"
             :number="3"
+            name="Select your currency"
+            stepName="currency"
+            :handler="finishStep"
+          >
+           <v-radio-group v-model="flow.currency.value">
+              <v-radio
+                v-for="currency in currencies"
+                :key="currency.value"
+                :label="currency.text"
+                :value="currency">
+              </v-radio>
+    </v-radio-group>
+            
+          </Step>
+          <Step
+            :status="flow.networks.done"
+            :number="4"
             name="Enjoy the smooth ride"
             stepName="confirm"
             :handler="save"
             last
           >
-            <v-expansion-panel-text>
+           <v-expansion-panel-text>
               You are now ready, fellow cosmonaut</v-expansion-panel-text
             >
           </Step>
@@ -121,6 +138,7 @@ export default {
     return {
       flow: {
         steps: [],
+        currency: {value:  {value: "usd", text: "USD"},next: "confirm", done: false},
         accounts: {
           fields: [
             {
@@ -129,7 +147,7 @@ export default {
             },
           ],
           done: false,
-          next: "confirm",
+          next: "currency",
         },
         networks: {
           done: false,
@@ -143,6 +161,7 @@ export default {
     ...mapActions({
       saveAccounts: "saveAccounts",
       saveNetworks: "saveNetworks",
+      saveCurrency: "saveCurrency",
       fetchNetworks: "fetchNetworks",
       fetchBalances: "fetchBalances",
       refreshPrices: "refreshPrices",
@@ -157,6 +176,7 @@ export default {
     async save() {
       await this.saveAccounts(this.flow.accounts.fields);
       await this.saveNetworks(this.flow.networks.selected);
+      await this.saveCurrency(this.flow.currency.value);
       this.refreshPrices();
       this.fetchBalances();
 
@@ -171,6 +191,7 @@ export default {
   computed: {
     ...mapGetters({
       networks: "getAllNetworks",
+      currencies: "getCurrencies",
       selectedNetworks: "getSelectedNetworks",
       networksLoaded: "getIsNetworksLoaded",
       seedAddresses: "getSeedAddresses",

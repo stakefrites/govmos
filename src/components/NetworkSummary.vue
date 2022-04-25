@@ -7,7 +7,7 @@
         </v-avatar>
         <strong>{{ network.name }}</strong>
         <span v-if="pricesLoaded">
-          - {{ price(network.name) }} $USD</span
+          - {{ price(network.name) }} ${{currency.text}}</span
         ></v-card-title
       >
       <v-expansion-panels>
@@ -118,6 +118,7 @@ export default {
       balances: "getBalancesByName",
       price: "getPriceByName",
       image: "getImageByName",
+      currency: "getCurrency",
     }),
   }
 };

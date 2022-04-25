@@ -16,6 +16,9 @@
           <v-chip class="mr-1" to="/settings">
             <v-icon size="x-large"> mdi-account-cog </v-icon>
           </v-chip>
+           <v-chip v-if="currency" class="mr-1" @click=" settingCurrency = true" >
+           {{currency.text}}
+          </v-chip>
            <v-chip class="mr-1"  @click="refreshBalances()">
              <v-tooltip activator="parent" anchor="bottom">Refresh all balances</v-tooltip>
             <v-icon size="x-large"> mdi-refresh </v-icon>
@@ -36,6 +39,16 @@
       <LoadingSnack :isLoaded="isPricesLoaded" what="prices"></LoadingSnack>
       <v-main class="body"> 
         <router-view />
+        <v-overlay :model-value="settingCurrency" class="align-center justify-center">
+  <v-card class="modal-card">
+    <v-card-title class="my-5">
+      <strong>Change currency</strong>
+</v-card-title>
+<v-card-text>
+        <CurrencyForm :handler="save"></CurrencyForm>
+</v-card-text>
+    </v-card>
+    </v-overlay>
       </v-main>
     </v-container>
     <v-footer class="bg-primary footer" fixed bottom>
@@ -67,14 +80,17 @@
 <script>
 import Logo from "@/components/Logo.vue";
 import { mapActions, mapGetters } from "vuex";
-import LoadingSnack from "./components/LoadingSnack.vue";
+import LoadingSnack from "@/components/LoadingSnack.vue";
+import CurrencyForm from "@/components/CurrencyForm.vue";
+import _ from "lodash";
 
 export default {
   name: "App",
 
   components: {
     Logo,
-    LoadingSnack
+    LoadingSnack,
+    CurrencyForm
 },
   beforeCreate() {
 		this.$store.commit('initialiseStore');
@@ -88,10 +104,11 @@ export default {
   computed: {
     ...mapGetters({
       network: "getNetworkByName",
+      currency: "getCurrency",
+      currencies: "getCurrencies",
       isBalancesLoaded : "getIsBalancesLoaded",
       isPricesLoaded : "getIsPricesLoaded",
       isNetworksLoaded : "getIsNetworksLoaded",
-      isCacheLoaded: "getIsCacheLoaded",
     }),
   },
   methods: {
@@ -105,7 +122,12 @@ export default {
       connectKeplr: "connectKeplr",
       loadCache: "loadCache",
       refreshPrices: "refreshPrices",
+      saveCurrency: "saveCurrency",
     }),
+    async save() {
+      this.settingCurrency = false;
+    },
+
     excerptAddress(address) {
       return address.substring(0, 10) + "..." + address.substring(address.length - 5);
     },
@@ -117,6 +139,8 @@ export default {
   data: () => ({
     snackbar: true,
     theme: "myCustomLightTheme",
+    currencyValue: {value:  {value: "usd", text: "USD"},next: "confirm", done: false},
+    settingCurrency: false
   }),
 };
 </script>
