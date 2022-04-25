@@ -11,16 +11,16 @@
               If you want to help us, consider delegating to our ATOM node <a href="https://restake.app/cosmoshub/cosmosvaloper1uepjmgfuk6rnd0djsglu88w7d0t49lmljdpae2" target="_blank">here</a> ❤️
             </div>
           </v-alert>
+          <v-row class="d-flex justify-space-around">
+            <DashboardSummary/>
+          </v-row>
   <v-row>
-    
     <NetworkSummary
       v-for="network in selectedNetworks"
       :key="network.name"
       :network="network"
     ></NetworkSummary>
   </v-row>
-  <AmountsCard name="All Accounts" isTotal/>
-  <AmountsCard v-for="wallet in totalValue.wallets" :key="wallet.name" :name="wallet.name" :wallet="wallet"/>
 </template>
 
 <script>
@@ -28,9 +28,10 @@ import { mapActions, mapGetters } from "vuex";
 import NetworkSummary from "@/components/NetworkSummary.vue";
 import PieChart from "@/components/BarChart.vue";
 import AmountsCard from "@/components/AmountsCard.vue";
+import DashboardSummary from "@/components/DashboardSummary.vue";
 export default {
   name: "DashboardView",
-  components: { NetworkSummary, PieChart, AmountsCard },
+  components: { NetworkSummary, PieChart, AmountsCard, DashboardSummary },
   data() {
     return {
       model: [],

@@ -18,19 +18,19 @@
       <v-divider></v-divider>
       <v-card-text class="mt-3 mb-3">
         <div class="d-flex justify-space-between">
-          <div class="cardtext_row cardtext_row_title">Available</div>
+          <div class="cardtext_row cardtext_row_title  text-body-2">Available</div>
           <div class="vcard_dot"></div>
-          <div>{{liquid}}</div>
+          <div class="text-body-2">{{liquid}}</div>
         </div>
         <div class="d-flex justify-space-between">
-          <div class="cardtext_row cardtext_row_title">Staked</div>
+          <div class="cardtext_row cardtext_row_title  text-body-2">Staked</div>
           <div class="vcard_dot"></div>
-          <div>{{staked}}</div>
+          <div class="text-body-2">{{staked}}</div>
         </div>
         <div class="d-flex justify-space-between">
-          <div class="cardtext_row cardtext_row_title">Rewards</div>
+          <div class="cardtext_row cardtext_row_title  text-body-2">Rewards</div>
           <div class="vcard_dot"></div>
-          <div class="cardtext_row cardtext_row_var">{{ rewards }}</div>
+          <div class="cardtext_row cardtext_row_var text-body-2">{{ rewards }}</div>
         </div>
       </v-card-text>
       <v-divider></v-divider>
