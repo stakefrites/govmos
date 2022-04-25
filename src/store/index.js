@@ -6,6 +6,7 @@ import actions from "./actions.js";
 
 const state = () => {
   return {
+    version: "",
     currency: { value: "usd", text: "USD" },
     currencies: [
       { value: "cad", text: "CAD" },
