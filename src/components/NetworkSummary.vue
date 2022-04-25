@@ -30,14 +30,15 @@
         <div class="d-flex justify-space-between">
           <div class="cardtext_row cardtext_row_title">Rewards</div>
           <div class="vcard_dot"></div>
-          <div class="cardtext_row cardtext_row_var">{{ parseFloat(balances(network.name).rewards).toFixed(2) }}</div>
+          <div class="cardtext_row cardtext_row_var">{{ rewards }}</div>
         </div>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions class="vcard_action d-flex justify-space-evenly">
-        <v-btn class="vcard_action_btn_right">Mor <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn>
+        <!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
+        <div class="text-h6">🥩 🍟</div>
         <v-divider vertical></v-divider>
-        <div class="vcard_action_btn_left font-weight-bold">{{ parseFloat(balances(network.name).total).toFixed(2) }} {{network.symbol}}</div>
+        <div class="vcard_action_btn_left font-weight-bold">{{total}}</div>
       </v-card-actions>
     </v-card>
   </v-col>
