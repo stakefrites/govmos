@@ -29,6 +29,11 @@ export default {
       return state.networks.prices[name].prices[state.currency.value];
     }
   },
+  getPriceByCurrencyByName: (state) => (name) => {
+    if (state.networks.prices[name]) {
+      return state.networks.prices[name].prices[state.currency.value];
+    }
+  },
   getTotalValue(state) {
     let totalValue = {
       total: 0,

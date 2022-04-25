@@ -88,6 +88,8 @@ export default {
   name: "DashboardSummary",
   data: () => ({}),
   methods: {},
+  created() {
+  },
  computed: {
     ...mapGetters({
       selectedNetworks: "getSelectedNetworks",

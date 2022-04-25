@@ -6,40 +6,38 @@
         <v-avatar size="50" class="mr-3">
           <img height="35" :src="image(network.name)" />
         </v-avatar>
-        <!-- <strong>{{ network.name }}</strong> -->
         <div class="vcard_title_div d-flex justify-end">
           <div class="card_title_chips_div">
-            <v-chip class="ma-2 vchip_card vchip_card_selected" color="primary" @click="selected.push(item)" label>{{network.symbol}}</v-chip>
-            <v-chip class="ma-2 vchip_card" variant="outlined" color="primary" @click="selected.push(item)" label>USD</v-chip>
+            <v-chip-group v-model="selected">
+            <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
+            <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip>
+            </v-chip-group>
           </div>
         </div>
       </v-card-title>
-      <!-- <v-card-subtitle v-if="balancesLoaded">
-        <div class="ml-2 text-h6">{{ parseFloat(balances(network.name).total).toFixed(2) }} {{network.symbol}}</div>
-      </v-card-subtitle> -->
       <v-divider></v-divider>
       <v-card-text class="mt-3 mb-3">
         <div class="d-flex justify-space-between">
           <div>Available</div>
           <div class="vcard_dot"></div>
-          <div>{{ balances(network.name).liquid }}</div>
+          <div>{{liquid}}</div>
         </div>
         <div class="d-flex justify-space-between">
           <div class="">Staked</div>
           <div class="vcard_dot"></div>
-          <div>{{ balances(network.name).staked }}</div>
+          <div>{{staked}}</div>
         </div>
         <div class="d-flex justify-space-between">
           <div class="">Rewards</div>
           <div class="vcard_dot"></div>
-          <div>{{ parseFloat(balances(network.name).rewards).toFixed(2) }}</div>
+          <div>{{ rewards}}</div>
         </div>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions class="vcard_action d-flex justify-space-between">
         <!-- <v-btn class="vcard_action_btn" text>See More</v-btn> -->
         <div>🥩 🍟</div>
-        <v-btn v-if="balancesLoaded" class="vcard_action_btn" text><div class="text-body-1">{{ parseFloat(balances(network.name).total).toFixed(2) }} {{network.symbol}}</div></v-btn>
+        <v-btn v-if="balancesLoaded" class="vcard_action_btn" text><div class="text-body-1">{{ total}}</div></v-btn>
       </v-card-actions>
     </v-card>
   </v-col>
@@ -56,11 +54,10 @@ export default {
     },
   },
   data: () => ({ apy: 0,
-  selected:  {
-    denom: false,
-    base: true
-  } }),
-  async created() {},
+  selected: "denom" }),
+  async created() {
+    console.log(this.price(this.network.name));
+  },
   methods: {},
   computed: {
     ...mapGetters({
@@ -68,10 +65,31 @@ export default {
       pricesLoaded: "getIsPricesLoaded",
       balancesLoaded: "getIsBalancesLoaded",
       balances: "getBalancesByName",
-      price: "getPriceByName",
+      price: "getPriceByCurrencyByName",
       image: "getImageByName",
       currency: "getCurrency",
     }),
+    staked: function() {
+      const value =this.selected == 'denom' ? parseFloat(this.balances(this.network.name).staked).toFixed(2) : parseFloat(this.balances(this.network.name).staked * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+    },
+     rewards: function() {
+      const value = this.selected == 'denom' ? parseFloat(this.balances(this.network.name).rewards).toFixed(2) : parseFloat(this.balances(this.network.name).rewards * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+    },
+     liquid: function() {
+      const value =  this.selected == 'denom' ? parseFloat(this.balances(this.network.name).liquid).toFixed(2) : parseFloat(this.balances(this.network.name).liquid * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+    },
+     total: function() {
+      const value =  this.selected == 'denom' ? parseFloat(this.balances(this.network.name).total).toFixed(2) : parseFloat(this.balances(this.network.name).total * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+      
+    },
   }
 };
 </script>
@@ -87,7 +105,7 @@ export default {
 }
 .vcard_dot {
   border-bottom: thin dotted gray;
-  width: 85%;
+  width: 34%;
   height: 16px
 }
 /*.vcard_action:hover {
