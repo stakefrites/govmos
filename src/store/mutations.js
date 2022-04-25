@@ -61,11 +61,11 @@ export default {
   },
   initialiseStore(state) {
     // Check if the ID exists
-
-    if (localStorage.getItem("store")) {
+    const store = localStorage.getItem("store");
+    if (store) {
       // Replace the state object with the stored item
       if (store.version == version) {
-        this.replaceState(Object.assign(state, localStorage.getItem("store")));
+        this.replaceState(Object.assign(state, store));
       } else {
         state.version = version;
       }
