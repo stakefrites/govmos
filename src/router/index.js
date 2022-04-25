@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
-   {
+  {
     path: "/",
     name: "dashboard",
     component: () => import("../views/DashboardView.vue"),
@@ -15,12 +15,12 @@ const routes = [
     name: "settings",
     component: () => import("../views/SettingsView.vue"),
   },
+  ,
   {
-    path: "/proposals/:network",
-    name: "proposals",
-    component: () => import("../views/ProposalView.vue"),
+    path: "/networks/:network",
+    name: "network",
+    component: () => import("../views/SingleChainView.vue"),
   },
-  
 ];
 
 const router = createRouter({
