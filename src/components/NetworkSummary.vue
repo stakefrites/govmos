@@ -37,7 +37,7 @@
       <v-card-actions class="vcard_action d-flex justify-space-evenly">
         <!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
         <div class="text-body-1">
-          <div>{{apr(network.name) == 0 ? "" : "APR: "+ parseFloat(apr(network.name) * 100).toFixed(2) + " %" }}</div>
+          <div>{{apr(network.name) == 0 || apr(network.name) == null  ? "" : "APR: "+ parseFloat(apr(network.name) * 100).toFixed(2) + " %" }}</div>
           <div class="text-body-1">{{parseFloat(price(network.name)).toFixed(5)}} {{currency.text}}</div>
           </div>
         <v-divider vertical></v-divider>

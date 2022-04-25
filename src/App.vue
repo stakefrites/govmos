@@ -99,7 +99,7 @@ export default {
     this.fetchNetworks();
     this.refreshPrices();
     this.refreshBalances();
-    this.fetchApr();
+    this.refreshApr();
 
   },
   computed: {
@@ -117,6 +117,7 @@ export default {
       fetchAvailableNetworks: "fetchAvailableNetworks",
       fetchNetworks: "fetchNetworks",
       refreshBalances: "refreshBalances",
+      refreshApr: "refreshApr",
       fetchNetworks: "fetchNetworks",
       fetchAddress: "fetchAddress",
       fetchApr: "fetchApr",

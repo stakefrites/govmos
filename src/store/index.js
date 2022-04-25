@@ -31,6 +31,8 @@ const state = () => {
       apr: {},
     },
     loaded: {
+      balanceExpireTime: null,
+      aprExpireTime: null,
       isBalancesLoaded: false,
       isPricesLoaded: false,
       isNetworksLoaded: false,

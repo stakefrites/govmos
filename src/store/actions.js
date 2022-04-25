@@ -52,6 +52,7 @@ const getAddress = (seed, chain) => {
 };
 
 const fetchApr = async ({ commit, state, dispatch }) => {
+  console.log("fetching apr", state.networks.selected);
   for (let chain of state.networks.selected) {
     let apr = 0;
     try {
@@ -230,25 +231,40 @@ const refreshPrices = async ({ commit, dispatch, state }) => {
   dispatch("fetchPrices", state.networks.selected);
 };
 const refreshBalances = async ({ commit, dispatch, state }) => {
-  const expireTime = localStorage.getItem("balanceExpireTime");
-  console.log(expireTime);
+  const newExpireTime = Date.now() + 1000 * 60 * 60;
+  const expireTime = state.loaded.balanceExpireTime;
   if (expireTime) {
     if (Date.now() > expireTime) {
       await dispatch("fetchBalances", state.networks.selected);
       commit("setIsBalancesLoaded", true);
-      localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
+      commit("setBalanceExpireTime", newExpireTime);
     } else {
       if (state.portfolio.wallets.length == 0) {
         await dispatch("fetchBalances", state.networks.selected);
         commit("setIsBalancesLoaded", true);
-        localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
+        commit("setBalanceExpireTime", newExpireTime);
       }
       commit("setIsBalancesLoaded", true);
     }
   } else {
     await dispatch("fetchBalances", state.networks.selected);
     commit("setIsBalancesLoaded", true);
-    localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
+    commit("setBalanceExpireTime", newExpireTime);
+  }
+};
+
+const refreshApr = async ({ commit, dispatch, state }) => {
+  const expireTime = state.loaded.aprExpireTime;
+  const newExpireTime = Date.now() + 1000 * 60 * 60 * 24;
+  if (expireTime) {
+    if (Date.now() > expireTime) {
+      await dispatch("fetchApr");
+      commit("setAprExpireTime", newExpireTime);
+    } else {
+    }
+  } else {
+    await dispatch("fetchApr");
+    commit("setAprExpireTime", newExpireTime);
   }
 };
 
@@ -278,6 +294,7 @@ const saveCurrency = async ({ commit, state, dispatch }, currency) => {
 
 export default {
   fetchAvailableNetworks,
+  refreshApr,
   fetchNetworks,
   fetchApr,
   fetchPrices,

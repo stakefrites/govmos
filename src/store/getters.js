@@ -120,4 +120,10 @@ export default {
   getCurrencies(state) {
     return state.currencies;
   },
+  getBalanceExpireTime(state) {
+    return state.loaded.balanceExpireTime;
+  },
+  getAprExpireTime(state) {
+    return state.loaded.aprExpireTime;
+  },
 };

@@ -41,6 +41,9 @@ export default {
   setIsBalancesLoaded(state, isLoaded) {
     state.loaded.isBalancesLoaded = isLoaded;
   },
+  setIsBalancesLoaded(state, isLoaded) {
+    state.loaded.isBalancesLoaded = isLoaded;
+  },
   setOnbordingAlert(state, isDisplayed) {
     state.alerts.onboarding = isDisplayed;
   },
@@ -61,8 +64,9 @@ export default {
   },
   initialiseStore(state) {
     // Check if the ID exists
-    const store = localStorage.getItem("store");
+    const store = JSON.parse(localStorage.getItem("store"));
     if (store) {
+      console.log(version);
       // Replace the state object with the stored item
       if (store.version == version) {
         this.replaceState(Object.assign(state, store));
@@ -70,5 +74,11 @@ export default {
         state.version = version;
       }
     }
+  },
+  setAprExpireTime(state, expireTime) {
+    state.loaded.aprExpireTime = expireTime;
+  },
+  setBalanceExpireTime(state, expireTime) {
+    state.loaded.balanceExpireTime = expireTime;
   },
 };
