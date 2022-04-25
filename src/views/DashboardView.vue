@@ -30,6 +30,55 @@
     </v-col>
   </v-row>
   <v-row>
+    <v-col v-for="wallet in totalValue.wallets" :key="wallet.name">
+  <v-card  variant="outlined" >
+        <v-card-header>
+          <v-card-subtitle><div class="text-h5">{{wallet.name}}</div></v-card-subtitle>
+        </v-card-header>
+                <div class="d-flex justify-space-around">
+
+         <div class="mx-5 mr-10">
+          <v-card flat class="px-3 py-6">
+          <v-card-subtitle>
+            <div class="text-h4">Total</div>
+          </v-card-subtitle>
+          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.value).toFixed(2)}} $</strong></div></v-card-title>
+          </v-card>
+        </div>
+        <v-divider class="my-6" vertical></v-divider>
+        <div class="mx-2">
+          <v-card flat class="px-3 py-6">
+          <v-card-subtitle>
+            <div class="text-h4">Staked</div>
+          </v-card-subtitle>
+          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.staked).toFixed(2)}}</strong></div></v-card-title>
+          </v-card>
+        </div>
+        <v-divider class="my-6" vertical></v-divider>
+        <div class="mx-2">
+<v-card flat class="px-3 py-6">
+          <v-card-subtitle>
+            <div class="text-h4">Rewards</div>
+          </v-card-subtitle>
+          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.rewards).toFixed(2)}} $</strong></div></v-card-title>
+          </v-card>
+        </div>
+        <v-divider class="my-6" vertical></v-divider>
+         <div class="mx-2">
+<v-card flat class="px-3 py-6">
+          <v-card-subtitle>
+            <div class="text-h4">Liquid</div>
+          </v-card-subtitle>
+          <v-card-title><div class="text-h5"><strong>{{parseFloat(wallet.liquid).toFixed(2)}} $</strong></div></v-card-title>
+          </v-card>
+        </div>
+        </div>
+        
+
+      </v-card>
+      </v-col>
+  </v-row>
+  <v-row>
     
     <NetworkSummary
       v-for="network in selectedNetworks"
