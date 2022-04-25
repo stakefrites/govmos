@@ -114,6 +114,7 @@ const fetchBalances = async ({ commit, state }) => {
   commit("setIsBalancesLoaded", false);
   let accounts = [];
   for (let account of state.portfolio.seedAddresses) {
+    console.log("account", account);
     const address = account.address;
     const wallet = { name: account.name, addresses: [], balances: {} };
     const selected = state.networks.selected;
@@ -233,13 +234,20 @@ const refreshBalances = async ({ commit, dispatch, state }) => {
   console.log(expireTime);
   if (expireTime) {
     if (Date.now() > expireTime) {
-      dispatch("fetchBalances", state.networks.selected);
+      await dispatch("fetchBalances", state.networks.selected);
+      commit("setIsBalancesLoaded", true);
       localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
     } else {
+      if (state.portfolio.wallets.length == 0) {
+        await dispatch("fetchBalances", state.networks.selected);
+        commit("setIsBalancesLoaded", true);
+        localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
+      }
       commit("setIsBalancesLoaded", true);
     }
   } else {
-    dispatch("fetchBalances", state.networks.selected);
+    await dispatch("fetchBalances", state.networks.selected);
+    commit("setIsBalancesLoaded", true);
     localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
   }
 };
