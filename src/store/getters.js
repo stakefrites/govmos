@@ -26,26 +26,46 @@ export default {
   },
   getPriceByName: (state) => (name) => {
     if (state.networks.prices[name]) {
-      return state.networks.prices[name].price;
+      return state.networks.prices[name].prices[state.currency.value];
+    }
+  },
+  getPriceByCurrencyByName: (state) => (name) => {
+    if (state.networks.prices[name]) {
+      return state.networks.prices[name].prices[state.currency.value];
     }
   },
   getTotalValue(state) {
     let totalValue = {
       total: 0,
+      staked: 0,
+      rewards: 0,
+      liquid: 0,
       wallets: [],
     };
     for (let wallet of state.portfolio.wallets) {
-      let folio = { name: wallet.name, value: 0 };
+      let folio = {
+        name: wallet.name,
+        value: 0,
+        staked: 0,
+        rewards: 0,
+        liquid: 0,
+      };
       for (let network of state.networks.selected) {
         const name = network.name;
         if (wallet.balances[name]) {
           let price = 0;
           if (state.networks.prices[name]) {
-            price = state.networks.prices[name].price;
+            price = state.networks.prices[name].prices[state.currency.value];
           }
           const value = wallet.balances[name].total * price;
           totalValue.total += value;
+          totalValue.staked += wallet.balances[name].staked * price;
+          totalValue.rewards += wallet.balances[name].rewards * price;
+          totalValue.liquid += wallet.balances[name].liquid * price;
           folio.value += value;
+          folio.staked += wallet.balances[name].staked * price;
+          folio.rewards += wallet.balances[name].rewards * price;
+          folio.liquid += wallet.balances[name].liquid * price;
         }
       }
       totalValue.wallets.push(folio);
@@ -90,5 +110,11 @@ export default {
   },
   getDashboardAlert(state) {
     return state.alerts.dashboard;
+  },
+  getCurrency(state) {
+    return state.currency;
+  },
+  getCurrencies(state) {
+    return state.currencies;
   },
 };

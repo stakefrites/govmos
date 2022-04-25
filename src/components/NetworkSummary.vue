@@ -6,28 +6,26 @@
         <v-avatar size="50" class="mr-3">
           <img height="35" :src="image(network.name)" />
         </v-avatar>
-        <!-- <strong>{{ network.name }}</strong> -->
         <div class="vcard_title_div d-flex justify-end">
           <div class="card_title_chips_div">
-            <v-chip class="ma-2 vchip_card vchip_card_selected" color="primary" @click="selected.push(item)" label>{{network.symbol}}</v-chip>
-            <v-chip class="ma-2 vchip_card" variant="outlined" color="primary" @click="selected.push(item)" label>USD</v-chip>
+            <v-chip-group v-model="selected">
+            <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
+            <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip>
+            </v-chip-group>
           </div>
         </div>
       </v-card-title>
-      <!-- <v-card-subtitle v-if="balancesLoaded">
-        <div class="ml-2 text-h6">{{ parseFloat(balances(network.name).total).toFixed(2) }} {{network.symbol}}</div>
-      </v-card-subtitle> -->
       <v-divider></v-divider>
       <v-card-text class="mt-3 mb-3">
         <div class="d-flex justify-space-between">
           <div class="cardtext_row cardtext_row_title">Available</div>
           <div class="vcard_dot"></div>
-          <div class="cardtext_row cardtext_row_var">{{ balances(network.name).liquid }}</div>
+          <div>{{liquid}}</div>
         </div>
         <div class="d-flex justify-space-between">
           <div class="cardtext_row cardtext_row_title">Staked</div>
           <div class="vcard_dot"></div>
-          <div class="cardtext_row cardtext_row_var">{{ balances(network.name).staked }}</div>
+          <div>{{staked}}</div>
         </div>
         <div class="d-flex justify-space-between">
           <div class="cardtext_row cardtext_row_title">Rewards</div>
@@ -43,104 +41,6 @@
       </v-card-actions>
     </v-card>
   </v-col>
-<!-- END network info vue -->
-  <!-- OG network info vue -->
-  <!-- <v-col xs="12" sm="6" md="6">
-    <v-card dark variant="outlined" :loading="networksLoaded">
-      <v-card-title>
-        <v-avatar size="50" class="mr-3">
-          <img height="35" :src="image(network.name)" />
-        </v-avatar>
-        <strong>{{ network.name }}</strong>
-        <span v-if="pricesLoaded">
-          - {{ price(network.name) }} $USD</span
-        ></v-card-title
-      >
-      <v-expansion-panels>
-        <v-expansion-panel elevation="0">
-          <v-expansion-panel-title>Network info</v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <v-table density="compact">
-              <tbody v-if="networksLoaded">
-                <tr>
-                  <td><strong>Chain ID</strong></td>
-                  <td>{{ network.chainId }}</td>
-                </tr>
-                <tr>
-                  <td><strong>Denom</strong></td>
-                  <td>{{ network.denom }}</td>
-                </tr>
-                <tr>
-                  <td><strong>Coin Gecko ID</strong></td>
-                  <td>{{ network.coinGeckoId }}</td>
-                </tr>
-                <tr>
-                  <td><strong>APY</strong></td>
-                  <td>{{ apy }}</td>
-                </tr>
-                <tr>
-                  <td><strong>Symbol</strong></td>
-                  <td>${{ network.symbol }}</td>
-                </tr>
-              </tbody>
-              <tbody v-else>
-                <tr>
-                  <td colspan="2">
-                    <v-progress-linear
-                      indeterminate
-                      color="primary"
-                    ></v-progress-linear>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-        <v-expansion-panel elevation="0">
-          <v-expansion-panel-title>Balances</v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <v-table v-if="balancesLoaded" density="compact" >
-              <tbody>
-                <tr>
-                  <td><strong>Total</strong></td>
-                  <td>{{ balances(network.name).total }}</td>
-                </tr>
-                <tr>
-                  <td><strong>Liquid</strong></td>
-                  <td>{{ balances(network.name).liquid }}</td>
-                </tr>
-                <tr>
-                  <td><strong>Staked</strong></td>
-                  <td>{{ balances(network.name).staked }}</td>
-                </tr>
-                <tr>
-                  <td><strong>Rewards</strong></td>
-                  <td>{{ balances(network.name).rewards }}</td>
-                </tr>
-                <tr>
-                  <td><strong>VALUE $</strong></td>
-                  <td>{{ balances(network.name).value }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-            <v-table v-else>
-              <tbody>
-                <tr>
-                  <td colspan="2">
-                    <v-progress-linear
-                      indeterminate
-                      color="primary"
-                    ></v-progress-linear>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-card>
-  </v-col> -->
-  <!-- END OG networkinfo vue -->
 </template>
 
 <script>
@@ -154,11 +54,10 @@ export default {
     },
   },
   data: () => ({ apy: 0,
-  selected:  {
-    denom: false,
-    base: true
-  } }),
-  async created() {},
+  selected: "denom" }),
+  async created() {
+    console.log(this.price(this.network.name));
+  },
   methods: {},
   computed: {
     ...mapGetters({
@@ -166,9 +65,31 @@ export default {
       pricesLoaded: "getIsPricesLoaded",
       balancesLoaded: "getIsBalancesLoaded",
       balances: "getBalancesByName",
-      price: "getPriceByName",
+      price: "getPriceByCurrencyByName",
       image: "getImageByName",
+      currency: "getCurrency",
     }),
+    staked: function() {
+      const value =this.selected == 'denom' ? parseFloat(this.balances(this.network.name).staked).toFixed(2) : parseFloat(this.balances(this.network.name).staked * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+    },
+     rewards: function() {
+      const value = this.selected == 'denom' ? parseFloat(this.balances(this.network.name).rewards).toFixed(2) : parseFloat(this.balances(this.network.name).rewards * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+    },
+     liquid: function() {
+      const value =  this.selected == 'denom' ? parseFloat(this.balances(this.network.name).liquid).toFixed(2) : parseFloat(this.balances(this.network.name).liquid * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+    },
+     total: function() {
+      const value =  this.selected == 'denom' ? parseFloat(this.balances(this.network.name).total).toFixed(2) : parseFloat(this.balances(this.network.name).total * this.price(this.network.name)).toFixed(2);
+      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      return `${value} ${text}`;
+      
+    },
   }
 };
 </script>
@@ -184,7 +105,7 @@ export default {
 }
 .vcard_dot {
   border-bottom: thin dotted gray;
-  width: 85%;
+  width: 34%;
   height: 16px
 }
 /*.vcard_action:hover {

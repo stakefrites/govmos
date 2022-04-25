@@ -6,6 +6,12 @@ import actions from "./actions.js";
 
 const state = () => {
   return {
+    currency: { value: "usd", text: "USD" },
+    currencies: [
+      { value: "cad", text: "CAD" },
+      { value: "usd", text: "USD" },
+      { value: "eur", text: "EUR" },
+    ],
     networks: {
       enabled: [
         "akash",

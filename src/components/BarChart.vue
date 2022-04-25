@@ -69,8 +69,8 @@ export default {
     this.chartData.datasets = [{ data: this.dataSet }];
     this.chartData.labels = this.labels;
     this.chartOptions = this.results.options;
-    this.width = 100;
-    this.height = 100;
+    this.width = 50;
+    this.height = 50;
   },
   computed: {
     dataSet() {
@@ -83,8 +83,8 @@ export default {
 
   data() {
     return {
-      width: 100,
-      height: 100,
+      width: 50,
+      height: 50,
       chartData: {
         labels: [],
         datasets: [

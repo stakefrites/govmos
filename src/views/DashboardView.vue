@@ -14,52 +14,23 @@
               If you want to help us, consider delegating to our ATOM node <a href="https://restake.app/cosmoshub/cosmosvaloper1uepjmgfuk6rnd0djsglu88w7d0t49lmljdpae2" target="_blank">here</a> ❤️
             </div>
           </v-alert>
-      <v-card  variant="outlined" >
-        <v-overlay
-        :model-value="!balancesLoaded"
-        contained
-        class="align-center justify-center"
-      >
-        <v-card dark class="pa-4">
-          <v-card-title>
-            <strong>Loading balances 🥩</strong>
-          </v-card-title>
-          <v-progress-linear indeterminate color="primary"></v-progress-linear>
-          </v-card>
-      </v-overlay>
-        <br>
-        <v-card-subtitle>
-          <h4>Total balance</h4>
-        </v-card-subtitle>
-        <v-card-title><strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong></v-card-title>
-        <v-row class="my-10">
-          <v-col>
-             <div class="d-flex flex-column align-center">
+          <DashboardSummary>
+            <!-- 
+              <v-col>
+            <div class="d-flex flex-column align-center">
               <div class="text-h5 mb-5">Value by wallet</div>
-              <PieChart :results="totalValue.wallets"></PieChart>
-          </div>
+              <div class="d-flex">
+              <slot></slot>
+              </div>
+            </div>
           </v-col>
-         <!--  <v-col>
-             <div class="d-flex flex-column align-center">
-              <div class="text-h5 mb-5">Value by token</div>
               <PieChart :results="totalValue.wallets"></PieChart>
-          </div>
-          </v-col> -->
-        </v-row>
-        <div class="d-flex justify-space-around">
-        <v-card class="pa-4 ma-5"  v-for="wallet in totalValue.wallets" :key="wallet.name">
-          <v-card-header>
-            <v-card-title>{{wallet.name}}</v-card-title>
-          </v-card-header>
-          <v-card-text>
-            <strong>{{parseFloat(wallet.value).toFixed(2)}} $</strong>
-          </v-card-text>
-        </v-card>
-        </div>
-      </v-card>
+            </div> -->
+          </DashboardSummary>
     </v-col>
   </v-row>
   <v-row>
+    
     <NetworkSummary
       v-for="network in selectedNetworks"
       :key="network.name"
@@ -72,9 +43,10 @@
 import { mapActions, mapGetters } from "vuex";
 import NetworkSummary from "@/components/NetworkSummary.vue";
 import PieChart from "@/components/BarChart.vue";
+import DashboardSummary from "@/components/DashboardSummary.vue";
 export default {
   name: "DashboardView",
-  components: { NetworkSummary, PieChart },
+  components: { NetworkSummary, PieChart, DashboardSummary },
   data() {
     return {
       model: [],
