@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { version } from "./package.json";
+import { version } from "../../package.json";
 
 export default {
   setSelectedNetworks(state, networks) {
