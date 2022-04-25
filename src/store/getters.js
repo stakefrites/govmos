@@ -32,10 +32,19 @@ export default {
   getTotalValue(state) {
     let totalValue = {
       total: 0,
+      staked: 0,
+      rewards: 0,
+      liquid: 0,
       wallets: [],
     };
     for (let wallet of state.portfolio.wallets) {
-      let folio = { name: wallet.name, value: 0 };
+      let folio = {
+        name: wallet.name,
+        value: 0,
+        staked: 0,
+        rewards: 0,
+        liquid: 0,
+      };
       for (let network of state.networks.selected) {
         const name = network.name;
         if (wallet.balances[name]) {
@@ -45,7 +54,13 @@ export default {
           }
           const value = wallet.balances[name].total * price;
           totalValue.total += value;
+          totalValue.staked += wallet.balances[name].staked * price;
+          totalValue.rewards += wallet.balances[name].rewards * price;
+          totalValue.liquid += wallet.balances[name].liquid * price;
           folio.value += value;
+          folio.staked += wallet.balances[name].staked * price;
+          folio.rewards += wallet.balances[name].rewards * price;
+          folio.liquid += wallet.balances[name].liquid * price;
         }
       }
       totalValue.wallets.push(folio);
