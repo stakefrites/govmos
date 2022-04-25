@@ -18,27 +18,32 @@
       </v-overlay>
         <br>
         <div class="d-flex justify-space-around">
-    
+          <v-row>
+    <v-col lg="3"  sm="6">
+            <div class="mx-5 mr-10">
+              <v-card flat class="px-3 py-6">
+                <v-card-subtitle>
+                  <div class="text-h4">Total</div>
+                </v-card-subtitle>
+                <v-card-title><div class="text-h5"><strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong></div></v-card-title>
+              </v-card>
+            </div>
+            </v-col>
+            <v-divider class="my-6" vertical></v-divider>
+        
+          <v-col lg="3" sm="6">
+               <div class="mx-2">
+            <v-card flat class="px-3 py-6">
+              <v-card-subtitle>
+                <div class="text-h4">Staked</div>
+              </v-card-subtitle>
+              <v-card-title><div class="text-h5"><strong>{{parseFloat(totalValue.staked).toFixed(2)}} $</strong></div></v-card-title>
+            </v-card>
+          </div>
 
-        <div class="mx-5 mr-10">
-          
-          <v-card flat class="px-3 py-6">
-          <v-card-subtitle>
-            <div class="text-h4">Total</div>
-          </v-card-subtitle>
-          <v-card-title><div class="text-h5"><strong>{{parseFloat(totalValue.total).toFixed(2)}} $</strong></div></v-card-title>
-          </v-card>
-        </div>
+          </v-col>
         <v-divider class="my-6" vertical></v-divider>
-        <div class="mx-2">
-          <v-card flat class="px-3 py-6">
-          <v-card-subtitle>
-            <div class="text-h4">Staked</div>
-          </v-card-subtitle>
-          <v-card-title><div class="text-h5"><strong>{{parseFloat(totalValue.staked).toFixed(2)}} $</strong></div></v-card-title>
-          </v-card>
-        </div>
-        <v-divider class="my-6" vertical></v-divider>
+        <v-col lg="3"  sm="6">
         <div class="mx-2">
 <v-card flat class="px-3 py-6">
           <v-card-subtitle>
@@ -47,7 +52,9 @@
           <v-card-title><div class="text-h5"><strong>{{parseFloat(totalValue.rewards).toFixed(2)}} $</strong></div></v-card-title>
           </v-card>
         </div>
+        </v-col>
         <v-divider class="my-6" vertical></v-divider>
+        <v-col lg="3"  sm="6">
          <div class="mx-2">
 <v-card flat class="px-3 py-6">
           <v-card-subtitle>
@@ -55,8 +62,12 @@
           </v-card-subtitle>
           <v-card-title><div class="text-h5"><strong>{{parseFloat(totalValue.liquid).toFixed(2)}} $</strong></div></v-card-title>
           </v-card>
+          </div>
+          </v-col>
+          </v-row>
+
         </div>
-        </div>
+        
     <!--     <v-row class="my-10">
            <slot></slot>
       
