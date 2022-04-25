@@ -36,7 +36,10 @@
       <v-divider></v-divider>
       <v-card-actions class="vcard_action d-flex justify-space-evenly">
         <!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
-        <div class="text-h6">🥩 🍟</div>
+        <div class="text-body-1">
+          <div>{{apr(network.name) == 0 ? "" : "APR: "+ parseFloat(apr(network.name) * 100).toFixed(2) + " %" }}</div>
+          <div class="text-body-1">{{parseFloat(price(network.name)).toFixed(5)}} {{currency.text}}</div>
+          </div>
         <v-divider vertical></v-divider>
         <div class="vcard_action_btn_left font-weight-bold">{{total}}</div>
       </v-card-actions>
@@ -68,6 +71,7 @@ export default {
       balances: "getBalancesByName",
       price: "getPriceByCurrencyByName",
       image: "getImageByName",
+      apr: "getAprByName",
       currency: "getCurrency",
     }),
     staked: function() {
