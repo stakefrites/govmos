@@ -26,7 +26,7 @@ export default {
   },
   getPriceByName: (state) => (name) => {
     if (state.networks.prices[name]) {
-      return state.networks.prices[name].price;
+      return state.networks.prices[name].prices[state.currency.value];
     }
   },
   getTotalValue(state) {
@@ -41,7 +41,7 @@ export default {
         if (wallet.balances[name]) {
           let price = 0;
           if (state.networks.prices[name]) {
-            price = state.networks.prices[name].price;
+            price = state.networks.prices[name].prices[state.currency.value];
           }
           const value = wallet.balances[name].total * price;
           totalValue.total += value;
@@ -90,5 +90,11 @@ export default {
   },
   getDashboardAlert(state) {
     return state.alerts.dashboard;
+  },
+  getCurrency(state) {
+    return state.currency;
+  },
+  getCurrencies(state) {
+    return state.currencies;
   },
 };

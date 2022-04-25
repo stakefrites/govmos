@@ -169,27 +169,6 @@ const fetchBalances = async ({ commit, state }) => {
   commit("setIsBalancesLoaded", true);
 };
 
-const fetcheBalances = async ({ commit, state }) => {
-  commit("setIsBalancesLoaded", false);
-  let accounts = [];
-  for (let account of state.portfolio.seedAddresses) {
-    const wallet = { name: account.name, addresses: [], balances: {} };
-    const folio = await state.networks.all[0].queryClient.getBalances(
-      account.address,
-      state.networks
-    );
-    wallet.balances = _.keyBy(folio, "name");
-    console.log("folio", folio);
-    for (let network of state.networks) {
-      let key = fromBech32(account.address);
-      wallet.addresses.push(toBech32(network.prefix, key.data));
-    }
-    accounts.push(wallet);
-  }
-  commit("setPortfolio", accounts);
-  commit("setIsBalancesLoaded", true);
-};
-
 const fetchPrices = async ({ commit, state }, chains) => {
   const asyncs = await mapAsync(chains, (chain) => {
     const { coinGeckoId } = chain;
@@ -199,7 +178,7 @@ const fetchPrices = async ({ commit, state }, chains) => {
         {
           params: {
             ids: coinGeckoId,
-            vs_currencies: "usd",
+            vs_currencies: "usd,cad,eur",
           },
         }
       );
@@ -210,6 +189,10 @@ const fetchPrices = async ({ commit, state }, chains) => {
     const configChain = chains[i];
     return {
       price: price.status === 200 ? price.data[configChain.coinGeckoId].usd : 0,
+      prices:
+        price.status === 200
+          ? price.data[configChain.coinGeckoId]
+          : { usd: 0, cad: 0, eur: 0 },
       name: price.status === 200 ? configChain.name : configChain.name,
     };
   });
@@ -233,13 +216,17 @@ const refreshPrices = async ({ commit, dispatch, state }) => {
 };
 const refreshBalances = async ({ commit, dispatch, state }) => {
   const expireTime = localStorage.getItem("balanceExpireTime");
+  console.log(expireTime);
   if (expireTime) {
     if (Date.now() > expireTime) {
       dispatch("fetchBalances", state.networks.selected);
-      localStorage.setItem("balanceExpireTime", new Date() + 1000 * 60 * 60);
+      localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
     } else {
       commit("setIsBalancesLoaded", true);
     }
+  } else {
+    dispatch("fetchBalances", state.networks.selected);
+    localStorage.setItem("balanceExpireTime", Date.now() + 1000 * 60 * 60);
   }
 };
 
@@ -263,6 +250,10 @@ const addChain = async ({ commit, dispatch, state }, network) => {
   commit("setAvailableNetworks", availables);
 };
 
+const saveCurrency = async ({ commit, state, dispatch }, currency) => {
+  commit("setCurrency", currency);
+};
+
 export default {
   fetchAvailableNetworks,
   fetchNetworks,
@@ -272,6 +263,7 @@ export default {
   saveNetworks,
   removeChain,
   addChain,
+  saveCurrency,
   refreshPrices,
   refreshBalances,
 };

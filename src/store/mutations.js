@@ -22,6 +22,9 @@ export default {
   setSeedAddresses(state, accounts) {
     state.portfolio.seedAddresses = accounts;
   },
+  setCurrency(state, currency) {
+    state.currency = currency;
+  },
   setPrices(state, prices) {
     state.networks.prices = prices;
   },
