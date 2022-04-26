@@ -12,6 +12,7 @@
             </div>
           </v-alert>
           <v-row class="d-flex justify-space-around">
+            Price last updated: {{showTime(balanceTime)}}
             <DashboardSummary/>
           </v-row>
   <v-row>
@@ -25,6 +26,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import moment from "moment";
 import NetworkSummary from "@/components/NetworkSummary.vue";
 import PieChart from "@/components/BarChart.vue";
 import AmountsCard from "@/components/AmountsCard.vue";
@@ -48,6 +50,10 @@ export default {
       fetchNetworks: "fetchNetworks",
       setAlert: "setDashboardAlert",
     }),
+    showTime(time) {
+      const unixStamp = time - (1000 * 60 * 60)
+      return moment(parseInt(unixStamp)).format("DD/MM HH:mm");
+    }
   },
   computed: {
     ...mapGetters({
@@ -58,6 +64,7 @@ export default {
       balancesLoaded: "getIsBalancesLoaded",
       seedAddresses : "getSeedAddresses",
       showAlert: "getDashboardAlert",
+      balanceTime: "getBalanceExpireTime",
     }),
   },
 };
