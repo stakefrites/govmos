@@ -254,6 +254,11 @@ const refreshBalances = async ({ commit, dispatch, state }) => {
 };
 
 const refreshApr = async ({ commit, dispatch, state }) => {
+  console.log(
+    "APR Refreshing",
+    state.loaded.aprExpireTime,
+    Object.values(state.networks.apr).length
+  );
   const expireTime = state.loaded.aprExpireTime;
   const newExpireTime = Date.now() + 1000 * 60 * 60 * 24;
   if (expireTime) {
@@ -261,6 +266,10 @@ const refreshApr = async ({ commit, dispatch, state }) => {
       await dispatch("fetchApr");
       commit("setAprExpireTime", newExpireTime);
     } else {
+      if (Object.values(state.networks.apr).length == 0) {
+        await dispatch("fetchApr");
+        commit("setAprExpireTime", newExpireTime);
+      }
     }
   } else {
     await dispatch("fetchApr");
