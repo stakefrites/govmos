@@ -14,30 +14,44 @@
           <v-row>
             <v-col>
               <div class="d-flex justify-space-between">
-              <div class="text-h1 my-10">Trakfolio</div>
-              <div class="text-h2 my-10">{{value(totalValue.total)}}</div>
+                <v-row>
+                <v-col><div class="text-h1 my-10">Trakfolio</div></v-col>
+                <v-col><div class="text-h2 my-10">{{value(totalValue.total)}}</div></v-col>
+                </v-row>
               </div>
             </v-col>
           </v-row>
-          <v-row>
-            <v-col>
-            <div class="d-flex flex-row justify-space-between">
-              <v-chip-group  mandatory v-model="selected">
-              <v-chip class="mx-1 vchip_card " color="primary" value="All" label>All</v-chip>
-              <v-chip v-for="wallet in totalValue.wallets" :key="wallet.name" class="mx-1 vchip_card " color="primary" :value="wallet.name" label>{{wallet.name}}</v-chip>
-           <!--  <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
-            <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip> -->
-            </v-chip-group>
-              <div>
-                <v-chip label class="mx-1" @click="refreshPrices" prepend-icon="mdi-currency-usd" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
-                <v-chip label class="mx-1" @click="refreshBalances" prepend-icon="mdi-account-cash" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
-             </div>
-            </div>
+          <v-row v-if="!mobile"  class="d-flex flex-row justify-space-between">
+              <v-col >
+                <v-chip-group  mandatory v-model="selected">
+                <v-chip size="large" class="mx-1 vchip_card " color="primary" value="All" label>All</v-chip>
+                <v-chip size="large" v-for="wallet in totalValue.wallets" :key="wallet.name" class="mx-1 vchip_card " color="primary" :value="wallet.name" label>{{wallet.name}}</v-chip>
+            <!--  <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
+              <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip> -->
+              </v-chip-group>
+            </v-col>
+            <v-col class="d-flex ">
+              <v-chip label class="mx-1" @click="refreshPrices" prepend-icon="mdi-currency-usd" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
+              <v-chip label class="mx-1" @click="refreshBalances" prepend-icon="mdi-account-cash" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
+            </v-col>
+          </v-row>
+            <v-row v-else class="d-flex flex-row justify-space-between">
+              <v-col >
+                <v-chip-group  mandatory v-model="selected">
+                <v-chip size="large" class="mx-1 vchip_card " color="primary" value="All" label>All</v-chip>
+                <v-chip size="large" v-for="wallet in totalValue.wallets" :key="wallet.name" class="mx-1 vchip_card " color="primary" :value="wallet.name" label>{{wallet.name}}</v-chip>
+            <!--  <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
+              <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip> -->
+              </v-chip-group>
+            </v-col>
+            <v-col  class="d-flex">
+              <v-chip size="large" label class="mx-1" @click="refreshPrices" prepend-icon="mdi-currency-usd" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
+              <v-chip size="large" label class="mx-1" @click="refreshBalances" prepend-icon="mdi-account-cash" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
             </v-col>
           </v-row>
           <v-row class="d-flex flex-row">
             <DashboardSummary :selected="selected"/>
-          </v-row>
+</v-row>       
   <v-row>
     <NetworkSummary
      :wallet="selected"
@@ -79,7 +93,7 @@ export default {
     }),
     showTime(time) {
       const unixStamp = time - (1000 * 60 * 60)
-      return moment(parseInt(unixStamp)).format("DD/MM HH:mm");
+      return this.mobile ?  moment(parseInt(unixStamp)).format("HH:mm"): moment(parseInt(unixStamp)).format("DD/MM HH:mm");
     },
         value(amount) {
           let locale = "en-US";
@@ -110,6 +124,10 @@ export default {
       priceTime: "getLastPriceTime",
       selectedWallet: "getSelectedWallet",
     }),
+     mobile() {
+       console.log(this.$vuetify.display.sm)
+    return this.$vuetify.display.xs || this.$vuetify.display.sm;
+  },
   },
 };
 </script>
