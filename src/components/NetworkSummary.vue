@@ -1,10 +1,22 @@
 <template>
 <!-- NEW network info vue -->
   <v-col xs="12" sm="6" md="4" lg="4" xl="4">
-    <v-card dark variant="outlined" class="rounded-lg" :loading="networksLoad">
+    <v-card dark variant="outlined" class="rounded-lg" :loading="networksLoaded">
+        <v-overlay
+        :model-value="!balancesLoaded"
+        contained
+        class="align-center justify-center"
+      >
+        <v-card dark class="pa-4">
+          <v-card-title>
+            <strong>Loading balances 🥩</strong>
+          </v-card-title>
+          <v-progress-linear indeterminate color="primary"></v-progress-linear>
+          </v-card>
+      </v-overlay>
       <v-card-title>
         <v-avatar size="50" class="mr-3">
-          <img height="35" :src="image(network.name)" />
+          <img height="35" :src="network.image" />
         </v-avatar>
         <div class="vcard_title_div d-flex justify-end">
           <div class="card_title_chips_div">
@@ -37,8 +49,9 @@
       <v-card-actions class="vcard_action d-flex justify-space-evenly">
         <!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
         <div class="text-body-1">
-          <div>{{apr(network.name) == 0 || apr(network.name) == null  ? "" : "APR: "+ parseFloat(apr(network.name) * 100).toFixed(2) + " %" }}</div>
-          <div class="text-body-1">{{parseFloat(price(network.name)).toFixed(5)}} {{currency.text}}</div>
+          <div v-if="aprLoaded"><v-chip v-if="apr(network.name) != 0" label>{{apr(network.name) == 0 || apr(network.name) == null  ? "" :  parseFloat(apr(network.name) * 100).toFixed(2) + " %" }}</v-chip></div>
+          <div v-else class="d-flex justify-center mb-2"><v-progress-circular size="small" width="3"  indeterminate></v-progress-circular></div>
+          <div v-if="pricesLoaded" class="text-body-1">{{parseFloat(price(network.name)).toFixed(5)}} {{currency.text}}</div>
           </div>
         <v-divider vertical></v-divider>
         <div class="vcard_action_btn_left font-weight-bold">{{total}}</div>
@@ -66,6 +79,7 @@ export default {
     ...mapGetters({
       networksLoaded: "getIsNetworksLoaded",
       pricesLoaded: "getIsPricesLoaded",
+      aprLoaded: "getIsAprLoaded",
       balancesLoaded: "getIsBalancesLoaded",
       balances: "getBalancesByName",
       price: "getPriceByCurrencyByName",
@@ -111,6 +125,10 @@ export default {
   border-bottom: thin dotted gray;
   width: 34%;
   height: 16px
+}
+
+.network-card {
+  max-height: 15px!important;
 }
 /*.vcard_action:hover {
   background-color: #fff;

@@ -53,7 +53,6 @@ const fetchPrices = async ({ commit, state }) => {
   });
   const mappedRequest = asyncs.map((price, i) => {
     const configChain = chains[i];
-    console.log(price, configChain);
     return {
       price:
         price.status === "fulfilled"
@@ -96,6 +95,7 @@ const refreshBalances = async ({ commit, dispatch, state }, reload) => {
     commit("setIsBalancesLoaded", true);
     commit("setBalanceExpireTime", newExpireTime);
   }
+  commit("setIsBalancesLoaded", true);
 };
 
 const refreshApr = async ({ commit, dispatch, state }) => {
@@ -109,15 +109,19 @@ const refreshApr = async ({ commit, dispatch, state }) => {
   if (expireTime) {
     if (Date.now() > expireTime) {
       await dispatch("fetchApr");
+      commit("setIsAprLoaded", true);
       commit("setAprExpireTime", newExpireTime);
     } else {
       if (Object.values(state.networks.apr).length == 0) {
         await dispatch("fetchApr");
+        commit("setIsAprLoaded", true);
         commit("setAprExpireTime", newExpireTime);
       }
     }
+    commit("setIsAprLoaded", true);
   } else {
     await dispatch("fetchApr");
+    commit("setIsAprLoaded", true);
     commit("setAprExpireTime", newExpireTime);
   }
 };

@@ -102,6 +102,9 @@ export default {
   getIsPricesLoaded(state) {
     return state.loaded.isPricesLoaded;
   },
+  getIsAprLoaded(state) {
+    return state.loaded.isAprLoaded;
+  },
   getIsProposalsLoaded(state) {
     return state.loaded.isProposalsLoaded;
   },

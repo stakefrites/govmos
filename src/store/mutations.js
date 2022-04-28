@@ -33,6 +33,9 @@ export default {
   setIsPricesLoaded(state, isLoaded) {
     state.loaded.isPricesLoaded = isLoaded;
   },
+  setIsAprLoaded(state, isLoaded) {
+    state.loaded.isAprLoaded = isLoaded;
+  },
   setIsNetworksLoaded(state, isLoaded) {
     state.loaded.isNetworksLoaded = isLoaded;
   },
