@@ -15,24 +15,29 @@
             <v-col>
               <div class="d-flex justify-space-between">
                 <v-row>
-                <v-col><div class="text-h1 my-10">Trakfolio</div></v-col>
-                <v-col><div class="text-h2 my-10">{{value(totalValue.total)}}</div></v-col>
+                  <v-col><div class="text-h1 my-10">Trakfolio</div></v-col>
+                  <v-col v-if="!mobile"><div class="text-h2 my-10 d-flex justify-end">{{value(totalValue.total)}}</div></v-col>
+                  <v-col v-else><div class="text-h2 my-3 d-flex justify-start">{{value(totalValue.total)}}</div></v-col>
                 </v-row>
               </div>
             </v-col>
           </v-row>
-          <v-row v-if="!mobile"  class="d-flex flex-row justify-space-between">
+          <v-row v-if="!mobile" >
               <v-col >
-                <v-chip-group  mandatory v-model="selected">
+                <div class="d-flex justify-start">
+                <v-chip-group mandatory v-model="selected">
                 <v-chip size="large" class="mx-1 vchip_card " color="primary" value="All" label>All</v-chip>
                 <v-chip size="large" v-for="wallet in totalValue.wallets" :key="wallet.name" class="mx-1 vchip_card " color="primary" :value="wallet.name" label>{{wallet.name}}</v-chip>
             <!--  <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
               <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip> -->
               </v-chip-group>
+              </div>
             </v-col>
-            <v-col class="d-flex ">
+            <v-col >
+              <div class="d-flex justify-end">
               <v-chip label class="mx-1" @click="refreshPrices" prepend-icon="mdi-currency-usd" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
               <v-chip label class="mx-1" @click="refreshBalances" prepend-icon="mdi-account-cash" append-icon="mdi-refresh">{{showTime(priceTime)}}</v-chip>
+              </div>
             </v-col>
           </v-row>
             <v-row v-else class="d-flex flex-row justify-space-between">

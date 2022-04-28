@@ -1,6 +1,6 @@
 <template>
 <!-- NEW network info vue -->
-  <v-col xs="12" sm="6" md="4" lg="4" xl="4">
+  <v-col xs="12" sm="6" md="6" lg="4" xl="4">
     <v-card dark variant="outlined" class="rounded-lg" :loading="networksLoaded">
         <v-overlay
         :model-value="!balancesLoaded"
@@ -18,7 +18,10 @@
         <v-avatar size="50" class="mr-3">
           <img height="35" :src="network.image" />
         </v-avatar>
-        <div class="vcard_title_div d-flex justify-end">
+        
+        <div class="vcard_title_div d-flex justify-space-between">
+          <div class="d-flex justify-center apr" v-if="aprLoaded" ><div class="mt-3 text-body-2" v-if="apr(network.name) != 0" label>{{apr(network.name) == 0 || apr(network.name) == null  ? "" :  parseFloat(apr(network.name) * 100).toFixed(0) + " %" }}</div></div>
+          <div v-else class="d-flex justify-center"><v-progress-circular size="small" width="3"  indeterminate></v-progress-circular></div>
           <div class="card_title_chips_div">
             <v-chip-group v-model="selected" mandatory>
             <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
@@ -49,8 +52,6 @@
       <v-card-actions class="vcard_action d-flex justify-space-evenly">
         <!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
         <div class="text-body-1">
-          <div v-if="aprLoaded"><v-chip v-if="apr(network.name) != 0" label>{{apr(network.name) == 0 || apr(network.name) == null  ? "" :  parseFloat(apr(network.name) * 100).toFixed(2) + " %" }}</v-chip></div>
-          <div v-else class="d-flex justify-center mb-2"><v-progress-circular size="small" width="3"  indeterminate></v-progress-circular></div>
           <div v-if="pricesLoaded" class="text-body-1">{{parseFloat(price(network.name)).toFixed(5)}} {{currency.text}}</div>
           </div>
         <v-divider vertical></v-divider>
@@ -156,6 +157,12 @@ export default {
 
 .network-card {
   max-height: 15px!important;
+}
+
+.apr {
+  font-size: 10px!important;
+  color: #9e9e9e;
+  margin-left: -3px;
 }
 /*.vcard_action:hover {
   background-color: #fff;
