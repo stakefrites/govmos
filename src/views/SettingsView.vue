@@ -64,7 +64,7 @@
         </v-col>
       </v-row>
       <v-card-actions>
-        <v-btn @click="accountModal = true" flat color="primary">Add wallet</v-btn>
+        <v-btn @click="accountModal = true" flat color="primary">Edit/Add wallets</v-btn>
       </v-card-actions>
     </v-card>
     
