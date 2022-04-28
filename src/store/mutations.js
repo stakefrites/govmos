@@ -6,6 +6,7 @@ export default {
     state.networks.selected = networks;
   },
   setAvailableNetworks(state, networks) {
+    console.log(state.networks.selected, networks);
     const available = networks.filter((net) => {
       return !state.networks.selected.find((net2) => net2.name === net.name);
     });
@@ -31,6 +32,9 @@ export default {
   },
   setIsPricesLoaded(state, isLoaded) {
     state.loaded.isPricesLoaded = isLoaded;
+  },
+  setIsAprLoaded(state, isLoaded) {
+    state.loaded.isAprLoaded = isLoaded;
   },
   setIsNetworksLoaded(state, isLoaded) {
     state.loaded.isNetworksLoaded = isLoaded;
@@ -80,5 +84,11 @@ export default {
   },
   setBalanceExpireTime(state, expireTime) {
     state.loaded.balanceExpireTime = expireTime;
+  },
+  setLastPriceTime(state, expireTime) {
+    state.loaded.lastPriceTime = expireTime;
+  },
+  setSelectedWallet(state, wallet) {
+    state.portfolio.selectedWallet = wallet;
   },
 };
