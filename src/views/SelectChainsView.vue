@@ -72,7 +72,7 @@
             :number="2"
             name="Enter your wallets"
             stepName="accounts"
-            :handler="finishStep"
+            :handler="isFormValid ? finishStep: () => {}"
           >
             <v-expansion-panel-text>
               <div
@@ -92,6 +92,8 @@
                   density="compact"
                   clearable
                   label="Address"
+                  @change="validateAddress(flow.accounts.fields[index].address)"
+                  :error-messages="errorMessages"
                   v-model="flow.accounts.fields[index].address"
                   placeholder="cosmos1zjq5sn0fe78s7fds8lhusjd7dufidjss9geughf7"
                 >
@@ -143,6 +145,7 @@
 </template>
 
 <script>
+import { fromBech32 } from "@cosmjs/encoding";
 import { mapActions, mapGetters } from "vuex";
 import Step from "@/components/Step.vue";
 export default {
@@ -150,6 +153,8 @@ export default {
   components: { Step },
   data() {
     return {
+      errorMessages: '',
+      isFormValid: false,
       selectAll: false,
       flow: {
         steps: [],
@@ -188,6 +193,19 @@ export default {
         this.flow.networks.selected = []
       }
     },
+    validateAddress(a) {
+      console.log("validating", a)
+    try {
+      this.isFormValid = true;
+      fromBech32(a);
+      this.errorMessages =  ''
+      return true;
+    } catch (error) {
+      this.isFormValid = false;
+      this.errorMessages =  'Invalid address'
+      return "Invalid address";
+    }
+  },
     addAccount() {
       this.flow.accounts.fields.push({ name: "", address: "" });
     },
