@@ -1,7 +1,7 @@
 import CosmosDirectory from "./CosmosDirectory";
 
 const Chain = async (data) => {
-  const directory = CosmosDirectory();
+  const directory = new CosmosDirectory();
 
   const chainData = await directory.getChainData(data.name);
   const tokenData = await directory.getTokenData(data.name);

@@ -1,51 +1,52 @@
 import axios from "axios";
 
-function CosmosDirectory() {
-  const directoryProtocol = process.env.DIRECTORY_PROTOCOL || "https";
-  const directoryDomain = process.env.DIRECTORY_DOMAIN || "cosmos.directory";
-  const rpcBase = `${directoryProtocol}://rpc.${directoryDomain}`;
-  const restBase = `${directoryProtocol}://rest.${directoryDomain}`;
-  const chainsUrl = `${directoryProtocol}://chains.${directoryDomain}`;
-  const validatorsUrl = `${directoryProtocol}://validators.${directoryDomain}`;
-
-  function rpcUrl(name) {
-    return rpcBase + "/" + name;
+class Directory {
+  constructor() {
+    this.directoryProtocol = process.env.DIRECTORY_PROTOCOL || "https";
+    this.directoryDomain = process.env.DIRECTORY_DOMAIN || "cosmos.directory";
+    this.rpcBase = `${this.directoryProtocol}://rpc.${this.directoryDomain}`;
+    this.restBase = `${this.directoryProtocol}://rest.${this.directoryDomain}`;
+    this.chainsUrl = `${this.directoryProtocol}://chains.${this.directoryDomain}`;
+    this.validatorsUrl = `${this.directoryProtocol}://validators.${this.directoryDomain}`;
+  }
+  rpcUrl(name) {
+    return this.rpcBase + "/" + name;
   }
 
-  function restUrl(name) {
-    return restBase + "/" + name;
+  restUrl(name) {
+    return this.restBase + "/" + name;
   }
 
-  function getChains() {
+  getChains() {
     return axios
-      .get(chainsUrl)
+      .get(this.chainsUrl)
       .then((res) => res.data)
       .then((data) => (Array.isArray(data) ? data : data.chains)) // deprecate
       .then((data) => data.reduce((a, v) => ({ ...a, [v.path]: v }), {}));
   }
 
-  function getChainData(name) {
+  getChainData(name) {
     return axios
-      .get([chainsUrl, name, "chain"].join("/"))
+      .get([this.chainsUrl, name, "chain"].join("/"))
       .then((res) => res.data);
   }
 
-  async function getTokenData(name) {
+  async getTokenData(name) {
     return axios
-      .get([chainsUrl, name, "assetlist"].join("/"))
+      .get([this.chainsUrl, name, "assetlist"].join("/"))
       .then((res) => res.data);
   }
 
-  function getOperators(chainName) {
+  getOperators(chainName) {
     return axios
-      .get(validatorsUrl + "/chains/" + chainName)
+      .get(this.validatorsUrl + "/chains/" + chainName)
       .then((res) => res.data)
       .then((data) => data.validators.filter((el) => el.restake));
   }
 
-  function getOperatorCounts() {
+  getOperatorCounts() {
     return axios
-      .get(validatorsUrl)
+      .get(this.validatorsUrl)
       .then((res) => res.data)
       .then((data) => (Array.isArray(data) ? data : data.validators)) // deprecate
       .then((data) =>
@@ -58,17 +59,6 @@ function CosmosDirectory() {
         }, {})
       );
   }
-
-  return {
-    rpcUrl,
-    restUrl,
-    chainsUrl,
-    getChains,
-    getChainData,
-    getTokenData,
-    getOperators,
-    getOperatorCounts,
-  };
 }
 
-export default CosmosDirectory;
+export default Directory;

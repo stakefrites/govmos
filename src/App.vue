@@ -19,13 +19,9 @@
            <v-chip v-if="currency" class="mr-1" @click=" settingCurrency = true" >
            {{currency.text}}
           </v-chip>
-           <v-chip class="mr-1"  @click="refreshBalances()">
+           <v-chip class="mr-1"  @click="refreshBalances(true)">
              <v-tooltip activator="parent" anchor="bottom">Refresh all balances</v-tooltip>
             <v-icon size="x-large"> mdi-refresh </v-icon>
-          </v-chip>
-          <v-chip class="mr-1"  @click="refreshPrices()">
-             <v-tooltip activator="parent" anchor="bottom">Refresh prices</v-tooltip>
-            <v-icon size="x-large"> mdi-currency-usd </v-icon>
           </v-chip>
            <v-chip class="mr-1"  @click="toggleDarkTheme()">
              <v-tooltip activator="parent" anchor="bottom">Toggle night mode</v-tooltip>
@@ -96,7 +92,7 @@ export default {
 		this.$store.commit('initialiseStore');
 	},
   created() {
-    this.fetchNetworks();
+    this.fetchNetworks(true);
     this.refreshPrices();
     this.refreshBalances();
     this.refreshApr();

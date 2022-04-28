@@ -1,8 +1,14 @@
 <template>
- <v-btn variant="default" color="primary" class="mb-3" @click="goBack">
+<div class="d-flex justify-space-between">
+  <v-btn variant="default" color="primary" class="mb-3" @click="goBack">
     <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
       Back
   </v-btn>
+  <v-btn variant="default" color="primary" class="mb-3" @click="save">
+    <v-icon class="mr-3" size="x-large"> mdi-content-save </v-icon>
+      Save
+  </v-btn>
+</div>
 <v-row>
   <v-col cols="12">
     <v-card color="primary">
@@ -46,7 +52,7 @@
         </v-card-title>
       </v-card-header>
       <v-row>
-        <v-col v-for="wallet in wallets" :key="wallet.name">
+        <v-col v-for="wallet in walletes" :key="wallet.name">
         <v-list>
           <v-list-subheader><div class="text-h4">{{wallet.name}}</div></v-list-subheader>
         <v-list-item v-for="address in wallet.addresses" :key="address">
@@ -77,6 +83,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { fromBech32,toBech32 } from "@cosmjs/encoding";
 import AddWalletForm from "@/components/AddWalletForm.vue";
 export default {
   name: "SettingsView",
@@ -86,14 +93,36 @@ export default {
       accountModal: false
     };
   },
+  watch() {
+    this.wallets
+  },
   computed: {
      ...mapGetters({
       wallets: "getWallets",
+      seedAddresses: "getSeedAddresses",
       selectedNetworks: "getSelectedNetworks",
       availableNetworks: "getAvailableNetworks",
       networksLoaded: "getIsNetworksLoaded",
       seedAddresses: "getSeedAddresses",
     }),
+    walletes() {
+      const wallets = [];
+      const seedAddresses = this.seedAddresses;
+      const selected = this.selectedNetworks;
+      for (let address of seedAddresses.filter(address => address.address.length > 0)) {
+        let wallet = {name: address.name, addresses: []};
+        const decoded = fromBech32(address.address)
+        const addresses = selected.map((network) => {
+          console.log(network)
+          const {  prefix } = network;
+          return toBech32(prefix, decoded.data);
+        })
+        wallet.addresses = addresses;
+        wallets.push(wallet);
+      }
+      console.log(wallets)
+  return wallets
+    },
   },
   methods: {
     closeModal() {
@@ -101,10 +130,18 @@ export default {
       },
      goBack() {
       this.$router.go(-1);
+      
+    },
+    save () {
+      this.$router.go(-1);
+      this.refreshBalances(true)
+      this.refreshPrices()
     },
     ...mapActions({
       removeChain: "removeChain",
-      addChain: "addChain"
+      addChain: "addChain",
+      refreshBalances: "refreshBalances",
+      refreshPrices: "refreshPrices"
     })
   },
   async created() {

@@ -5,14 +5,6 @@
       <v-card-title>
         <div class="text-h6">Summary</div>
         <div class="vcard_title_div d-flex justify-end">
-          <div class="card_title_chips_div">
-            <v-chip-group mandatory v-model="selected">
-              <v-chip class="ma-2 vchip_card " color="primary" value="All" label>All</v-chip>
-              <v-chip v-for="wallet in totalValue.wallets" :key="wallet.name" class="ma-2 vchip_card " color="primary" :value="wallet.name" label>{{wallet.name}}</v-chip>
-           <!--  <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
-            <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip> -->
-            </v-chip-group>
-          </div>
         </div>
       </v-card-title>
       <v-card-text class="mt-3 mb-3">
@@ -53,6 +45,9 @@ export default {
       type: Object,
       required: true,
     },
+    selected: {
+      type: String
+    }
   },
   data: () => ({ 
     selected: "All" ,
@@ -94,8 +89,19 @@ export default {
       }
     },
     value(amount) {
-      return parseFloat(amount).toFixed(2) + " " + this.currency.text
-    },
+          let locale = "en-US";
+          if (this.currency.value === "cad") {
+            locale = "fr-CA";
+          } else if (this.currency.value === "eur") {
+            locale = "fr-FR";
+          }
+          let intl = new Intl.NumberFormat(locale, {
+            style: "currency",
+            currency: this.currency.value,
+            minimumFractionDigits: 2,
+          });
+      return intl.format(amount);
+    }
 
   },
   computed: {
