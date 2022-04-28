@@ -36,6 +36,7 @@ const state = () => {
       isBalancesLoaded: false,
       isPricesLoaded: false,
       isNetworksLoaded: false,
+      isAprLoaded: false,
     },
     alerts: {
       onboarding: true,

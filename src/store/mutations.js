@@ -6,6 +6,7 @@ export default {
     state.networks.selected = networks;
   },
   setAvailableNetworks(state, networks) {
+    console.log(state.networks.selected, networks);
     const available = networks.filter((net) => {
       return !state.networks.selected.find((net2) => net2.name === net.name);
     });

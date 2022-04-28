@@ -1,5 +1,5 @@
 <template>
-<v-alert type="info" class="my-5" border>
+<v-alert closable type="info" class="my-5" border>
             <v-alert-title>
               <div class="text-subtitle-1">Quick pointers</div>
               </v-alert-title>
@@ -11,8 +11,13 @@
               If you want to help us, consider delegating to our ATOM node <a href="https://restake.app/cosmoshub/cosmosvaloper1uepjmgfuk6rnd0djsglu88w7d0t49lmljdpae2" target="_blank">here</a> ❤️
             </div>
           </v-alert>
-          <v-row class="d-flex justify-space-around">
+          <v-row class="d-flex flex-row">
+            <v-chip label class="mx-4">
             Price last updated: {{showTime(balanceTime)}}
+            </v-chip>
+            <v-chip label>
+            Price last updated: {{showTime(balanceTime)}}
+            </v-chip>
             <DashboardSummary/>
           </v-row>
   <v-row>
@@ -65,6 +70,7 @@ export default {
       seedAddresses : "getSeedAddresses",
       showAlert: "getDashboardAlert",
       balanceTime: "getBalanceExpireTime",
+      priceTim: "getLastPriceTime",
     }),
   },
 };

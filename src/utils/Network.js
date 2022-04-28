@@ -7,7 +7,7 @@ import CosmosDirectory from "./CosmosDirectory";
 
 const Network = async (data, withoutQueryClient) => {
   const chain = await Chain(data);
-  const directory = CosmosDirectory();
+  const directory = new CosmosDirectory();
 
   const rpcUrl = data.rpcUrl || directory.rpcUrl(data.name);
   const restUrl = data.restUrl || directory.restUrl(data.name);

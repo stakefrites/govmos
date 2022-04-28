@@ -1,8 +1,14 @@
 <template>
- <v-btn variant="default" color="primary" class="mb-3" @click="goBack">
+<div class="d-flex justify-space-between">
+  <v-btn variant="default" color="primary" class="mb-3" @click="goBack">
     <v-icon class="mr-3" size="x-large"> mdi-arrow-left </v-icon>
       Back
   </v-btn>
+  <v-btn variant="default" color="primary" class="mb-3" @click="save">
+    <v-icon class="mr-3" size="x-large"> mdi-content-save </v-icon>
+      Save
+  </v-btn>
+</div>
 <v-row>
   <v-col cols="12">
     <v-card color="primary">
@@ -101,10 +107,18 @@ export default {
       },
      goBack() {
       this.$router.go(-1);
+      
+    },
+    save () {
+      this.$router.go(-1);
+      this.refreshBalances(true)
+      this.refreshPrices()
     },
     ...mapActions({
       removeChain: "removeChain",
-      addChain: "addChain"
+      addChain: "addChain",
+      refreshBalances: "refreshBalances",
+      refreshPrices: "refreshPrices"
     })
   },
   async created() {

@@ -32,6 +32,20 @@
           >
             <v-expansion-panel-text>
               <v-list>
+                 <v-list-item
+                  variant="dense"
+                >
+                  <v-list-item-header>
+                    <v-list-item-title class="mb-10">Select All</v-list-item-title>
+                  </v-list-item-header>
+                  <div class="d-flex">
+                    <v-checkbox
+                      density="compact"
+                      v-model="selectAll"
+                      @change="selectAllNetworks"
+                    />
+                  </div>
+                </v-list-item>
                 <v-list-item
                   variant="dense"
                   v-for="network in networks"
@@ -136,6 +150,7 @@ export default {
   components: { Step },
   data() {
     return {
+      selectAll: false,
       flow: {
         steps: [],
         currency: {value:  {value: "usd", text: "USD"},next: "confirm", done: false},
@@ -166,6 +181,13 @@ export default {
       fetchBalances: "fetchBalances",
       refreshPrices: "refreshPrices",
     }),
+    selectAllNetworks() {
+      if (this.selectAll) {
+      this.flow.networks.selected = this.networks
+      } else {
+        this.flow.networks.selected = []
+      }
+    },
     addAccount() {
       this.flow.accounts.fields.push({ name: "", address: "" });
     },
@@ -184,7 +206,7 @@ export default {
     },
   },
   async created() {
-    await this.fetchNetworks();
+    await this.fetchNetworks(true);
     this.flow.networks.selected = this.selectedNetworks;
     this.flow.accounts.fields = this.seedAddresses;
   },
