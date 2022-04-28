@@ -82,6 +82,7 @@ const saveNetworks = async ({ commit, state, dispatch }, networks) => {
 
 const refreshPrices = async ({ commit, dispatch, state }) => {
   dispatch("fetchPrices");
+  commit("setLastPriceTime", Date.now());
 };
 const refreshBalances = async ({ commit, dispatch, state }, reload) => {
   const newExpireTime = Date.now() + 1000 * 60 * 60;
@@ -147,8 +148,14 @@ const saveCurrency = async ({ commit, state, dispatch }, currency) => {
   commit("setCurrency", currency);
 };
 
+const changeSelectedWallet = async ({ commit, state }, wallet) => {
+  console.log("changing");
+  commit("setSelectedWallet", wallet);
+};
+
 export default {
   refreshApr,
+  changeSelectedWallet,
   fetchNetworks,
   fetchApr,
   fetchPrices,

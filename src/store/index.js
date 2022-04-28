@@ -33,6 +33,7 @@ const state = () => {
     loaded: {
       balanceExpireTime: null,
       aprExpireTime: null,
+      lastPriceTime: null,
       isBalancesLoaded: false,
       isPricesLoaded: false,
       isNetworksLoaded: false,
@@ -45,6 +46,7 @@ const state = () => {
     portfolio: {
       seedAddresses: [],
       wallets: [],
+      selectedWallet: "All",
     },
   };
 };

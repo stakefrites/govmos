@@ -85,4 +85,10 @@ export default {
   setBalanceExpireTime(state, expireTime) {
     state.loaded.balanceExpireTime = expireTime;
   },
+  setLastPriceTime(state, expireTime) {
+    state.loaded.lastPriceTime = expireTime;
+  },
+  setSelectedWallet(state, wallet) {
+    state.portfolio.selectedWallet = wallet;
+  },
 };

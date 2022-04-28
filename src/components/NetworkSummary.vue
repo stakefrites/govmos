@@ -20,7 +20,7 @@
         </v-avatar>
         <div class="vcard_title_div d-flex justify-end">
           <div class="card_title_chips_div">
-            <v-chip-group v-model="selected">
+            <v-chip-group v-model="selected" mandatory>
             <v-chip class="ma-2 vchip_card " color="primary" value="denom" label>{{network.symbol}}</v-chip>
             <v-chip class="ma-2 vchip_card" color="primary"  value="base" label>{{currency.text}}</v-chip>
             </v-chip-group>
@@ -62,6 +62,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import _ from "lodash"
 export default {
   name: "NetworkSummary",
   props: {
@@ -69,42 +70,68 @@ export default {
       type: Object,
       required: true,
     },
+     wallet: {
+      type: String
+    }
   },
   data: () => ({ apy: 0,
   selected: "denom" }),
   async created() {
   },
-  methods: {},
+  methods: {
+    value(amount) {
+          let locale = "en-US";
+          if (this.currency.value === "cad") {
+            locale = "fr-CA";
+          } else if (this.currency.value === "eur") {
+            locale = "fr-FR";
+          }
+          let intl = new Intl.NumberFormat(locale, {
+            style: "currency",
+            currency: this.currency.value,
+            minimumFractionDigits: 2,
+          });
+      return intl.format(amount);
+    }
+  },
   computed: {
     ...mapGetters({
       networksLoaded: "getIsNetworksLoaded",
       pricesLoaded: "getIsPricesLoaded",
       aprLoaded: "getIsAprLoaded",
       balancesLoaded: "getIsBalancesLoaded",
+      totalValue: "getTotalValue",
       balances: "getBalancesByName",
       price: "getPriceByCurrencyByName",
       image: "getImageByName",
       apr: "getAprByName",
       currency: "getCurrency",
+      amount: "getAmountByWalletAndDenom",
     }),
+    
     staked: function() {
-      const value =this.selected == 'denom' ? parseFloat(this.balances(this.network.name).staked).toFixed(2) : parseFloat(this.balances(this.network.name).staked * this.price(this.network.name)).toFixed(2);
-      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+      const balance = this.wallet === "All" ? this.balances(this.network.name).staked : this.amount({walletName:this.wallet, denom:this.network.name}).staked;
+      console.log(balance)
+      const value =this.selected == 'denom' ? parseFloat(balance).toFixed(2) : this.value(balance *this.price(this.network.name));
+      const text =this.selected == 'denom' ?  this.network.symbol : "";
       return `${value} ${text}`;
     },
      rewards: function() {
-      const value = this.selected == 'denom' ? parseFloat(this.balances(this.network.name).rewards).toFixed(2) : parseFloat(this.balances(this.network.name).rewards * this.price(this.network.name)).toFixed(2);
-      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+       const balance = this.wallet === "All" ? this.balances(this.network.name).rewards : this.amount({walletName:this.wallet, denom:this.network.name}).rewards;
+      const value = this.selected == 'denom' ? parseFloat(balance).toFixed(2) : this.value(balance * this.price(this.network.name));
+      const text =this.selected == 'denom' ?  this.network.symbol : "";
       return `${value} ${text}`;
     },
      liquid: function() {
-      const value =  this.selected == 'denom' ? parseFloat(this.balances(this.network.name).liquid).toFixed(2) : parseFloat(this.balances(this.network.name).liquid * this.price(this.network.name)).toFixed(2);
-      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+       const balance = this.wallet === "All" ? this.balances(this.network.name).liquid : this.amount({walletName:this.wallet, denom:this.network.name}).liquid;
+      const value =  this.selected == 'denom' ? parseFloat(balance).toFixed(2): this.value(balance * this.price(this.network.name));
+      const text =this.selected == 'denom' ?  this.network.symbol : "";
       return `${value} ${text}`;
     },
      total: function() {
-      const value =  this.selected == 'denom' ? parseFloat(this.balances(this.network.name).total).toFixed(2) : parseFloat(this.balances(this.network.name).total * this.price(this.network.name)).toFixed(2);
-      const text =this.selected == 'denom' ?  this.network.symbol : this.currency.text 
+       const balance = this.wallet === "All" ? this.balances(this.network.name).total : this.amount({walletName:this.wallet, denom:this.network.name}).total;
+      const value =  this.selected == 'denom' ?parseFloat(balance).toFixed(2) :  this.value(balance *this.price(this.network.name));
+      const text =this.selected == 'denom' ?  this.network.symbol : "";
       return `${value} ${text}`;
       
     },

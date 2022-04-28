@@ -96,6 +96,13 @@ export default {
     }
     return balances;
   },
+  getAmountByWalletAndDenom:
+    (state) =>
+    ({ walletName, denom }) => {
+      const walletObj = _.keyBy(state.portfolio.wallets, "name");
+
+      return walletObj[walletName].balances[denom];
+    },
   getIsNetworksLoaded(state) {
     return state.loaded.isNetworksLoaded;
   },
@@ -128,5 +135,11 @@ export default {
   },
   getAprExpireTime(state) {
     return state.loaded.aprExpireTime;
+  },
+  getLastPriceTime(state) {
+    return state.loaded.lastPriceTime;
+  },
+  getSelectedWallet(state) {
+    return state.portfolio.selectedWallet;
   },
 };
