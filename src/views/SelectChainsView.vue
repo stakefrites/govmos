@@ -145,9 +145,21 @@
 </template>
 
 <script>
-import { fromBech32 } from "@cosmjs/encoding";
+import _ from "lodash";
+import { fromBech32, toBech32 } from "@cosmjs/encoding";
 import { mapActions, mapGetters } from "vuex";
 import Step from "@/components/Step.vue";
+
+function compactAccounts(accounts) {
+  console.log("compacting accounts", accounts)
+  const samePrefix =  accounts.map(account => {
+    const {address, name} = account;
+    const decoded = fromBech32(address);
+    return {address: toBech32("cosmos", decoded.data), name};
+  });
+  return _.uniqBy(samePrefix,"address");
+}
+
 export default {
   name: "SelectChainsView",
   components: { Step },
@@ -185,6 +197,7 @@ export default {
       fetchNetworks: "fetchNetworks",
       fetchBalances: "fetchBalances",
       refreshPrices: "refreshPrices",
+      refreshApr: "refreshApr",
     }),
     selectAllNetworks() {
       if (this.selectAll) {
@@ -214,10 +227,12 @@ export default {
       this.flow.steps = [this.flow[step].next];
     },
     async save() {
-      await this.saveAccounts(this.flow.accounts.fields);
+      const accounts = compactAccounts(this.flow.accounts.fields);
+      await this.saveAccounts(accounts);
       await this.saveNetworks(this.flow.networks.selected);
       await this.saveCurrency(this.flow.currency.value);
       this.refreshPrices();
+      this.refreshApr();
       this.fetchBalances();
 
       this.$router.push("/");
