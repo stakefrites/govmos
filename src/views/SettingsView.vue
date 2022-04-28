@@ -52,7 +52,7 @@
         </v-card-title>
       </v-card-header>
       <v-row>
-        <v-col v-for="wallet in wallets" :key="wallet.name">
+        <v-col v-for="wallet in walletes" :key="wallet.name">
         <v-list>
           <v-list-subheader><div class="text-h4">{{wallet.name}}</div></v-list-subheader>
         <v-list-item v-for="address in wallet.addresses" :key="address">
@@ -83,6 +83,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { fromBech32,toBech32 } from "@cosmjs/encoding";
 import AddWalletForm from "@/components/AddWalletForm.vue";
 export default {
   name: "SettingsView",
@@ -92,14 +93,36 @@ export default {
       accountModal: false
     };
   },
+  watch() {
+    this.wallets
+  },
   computed: {
      ...mapGetters({
       wallets: "getWallets",
+      seedAddresses: "getSeedAddresses",
       selectedNetworks: "getSelectedNetworks",
       availableNetworks: "getAvailableNetworks",
       networksLoaded: "getIsNetworksLoaded",
       seedAddresses: "getSeedAddresses",
     }),
+    walletes() {
+      const wallets = [];
+      const seedAddresses = this.seedAddresses;
+      const selected = this.selectedNetworks;
+      for (let address of seedAddresses.filter(address => address.address.length > 0)) {
+        let wallet = {name: address.name, addresses: []};
+        const decoded = fromBech32(address.address)
+        const addresses = selected.map((network) => {
+          console.log(network)
+          const {  prefix } = network;
+          return toBech32(prefix, decoded.data);
+        })
+        wallet.addresses = addresses;
+        wallets.push(wallet);
+      }
+      console.log(wallets)
+  return wallets
+    },
   },
   methods: {
     closeModal() {
