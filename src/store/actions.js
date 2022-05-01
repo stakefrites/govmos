@@ -1,26 +1,30 @@
 import _ from "lodash";
-import axios from "axios";
-import ApyClient from "../utils/ApyClient";
-import { getAllBalances, getChains, mapAsync } from "./utils.js";
+import Backend from "../utils/Backend";
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5001";
+const { getAllBalances, getChains, getTokens, getAllPrices, getApr } =
+  new Backend(BACKEND_URL);
 
 const fetchApr = async ({ commit, state, dispatch }) => {
-  console.log("fetching apr", state.networks.selected);
   for (let chain of state.networks.selected) {
     let apr = 0;
     try {
-      const client = ApyClient(chain, chain.rpcUrl, chain.restUrl);
-      apr = await client.getApy();
+      apr = await getApr(chain.name);
+      commit("setApr", { name: chain.name, apr });
     } catch (error) {
       console.log(error);
     }
-    commit("setApr", { name: chain.name, apr });
   }
 };
 
 const fetchNetworks = async ({ commit, state }, isAll) => {
-  const toFetch = isAll ? state.networks.enabled : state.networks.available;
+  const toFetch = isAll
+    ? state.networks.enabled.join(",")
+    : state.networks.available.map((n) => n.name).join(",");
   const chains = await getChains(toFetch);
-  commit(isAll ? "setAllNetworks" : "setAvailableNetworks", chains);
+  commit(
+    isAll ? "setAllNetworks" : "setAvailableNetworks",
+    Object.values(chains)
+  );
   commit("setIsNetworksLoaded", true);
 };
 
@@ -34,42 +38,27 @@ const fetchBalances = async ({ commit, state }) => {
   commit("setIsBalancesLoaded", true);
 };
 
+const fetchTokens = async ({ commit, state }) => {
+  const tokens = await getTokens();
+  commit("setTokens", _.keyBy(tokens, "base"));
+};
+
 const fetchPrices = async ({ commit, state }) => {
-  const chains = state.networks.selected;
-  const asyncs = await mapAsync(chains, (chain) => {
-    const { coinGeckoId } = chain;
-    if (coinGeckoId !== undefined) {
-      const datarr = axios.get(
-        "https://api.coingecko.com/api/v3/simple/price",
-        {
-          params: {
-            ids: coinGeckoId,
-            vs_currencies: "usd,cad,eur",
-          },
-        }
-      );
-      return datarr;
-    }
-  });
-  const mappedRequest = asyncs.map((price, i) => {
-    const configChain = chains[i];
+  const chains = Object.values(state.tokens)
+    .filter((t) => t.coingecko_id)
+    .map((t) => ({ id: t.coingecko_id, denom: t.base }));
+  const prices = await getAllPrices(chains);
+
+  const pricesMapped = prices.map((p) => {
     return {
-      price:
-        price.status === "fulfilled"
-          ? price.value.data[configChain.coinGeckoId].usd
-          : 0,
-      prices:
-        price.status === "fulfilled"
-          ? price.value.data[configChain.coinGeckoId]
-          : { usd: 0, cad: 0, eur: 0 },
-      name: price.status === "fulfilled" ? configChain.name : configChain.name,
+      denom: p.denom,
+      coingecko_id: Object.entries(p.price)[0][0],
+      prices: Object.entries(p.price)[0][1],
     };
   });
-
-  const pricesMap = _.keyBy(mappedRequest, "name");
+  const pricesMap = _.keyBy(pricesMapped, "denom");
   commit("setPrices", pricesMap);
   commit("setIsPricesLoaded", true);
-  return mappedRequest;
 };
 
 const saveAccounts = async ({ commit, state }, addresses) => {
@@ -100,11 +89,6 @@ const refreshBalances = async ({ commit, dispatch, state }, reload) => {
 };
 
 const refreshApr = async ({ commit, dispatch, state }) => {
-  console.log(
-    "APR Refreshing",
-    state.loaded.aprExpireTime,
-    Object.values(state.networks.apr).length
-  );
   const expireTime = state.loaded.aprExpireTime;
   const newExpireTime = Date.now() + 1000 * 60 * 60 * 24;
   if (expireTime) {
@@ -149,14 +133,13 @@ const saveCurrency = async ({ commit, state, dispatch }, currency) => {
 };
 
 const changeSelectedWallet = async ({ commit, state }, wallet) => {
-  console.log("changing");
   commit("setSelectedWallet", wallet);
 };
-
 export default {
   refreshApr,
   changeSelectedWallet,
   fetchNetworks,
+  fetchTokens,
   fetchApr,
   fetchPrices,
   fetchBalances,
