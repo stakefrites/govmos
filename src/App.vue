@@ -106,25 +106,15 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchAvailableNetworks: "fetchAvailableNetworks",
       fetchNetworks: "fetchNetworks",
       refreshBalances: "refreshBalances",
       refreshApr: "refreshApr",
       fetchNetworks: "fetchNetworks",
-      fetchAddress: "fetchAddress",
-      fetchApr: "fetchApr",
-      disconnectKeplr: "disconnectKeplr",
-      connectKeplr: "connectKeplr",
-      loadCache: "loadCache",
       refreshPrices: "refreshPrices",
       saveCurrency: "saveCurrency",
     }),
     async save() {
       this.settingCurrency = false;
-    },
-
-    excerptAddress(address) {
-      return address.substring(0, 10) + "..." + address.substring(address.length - 5);
     },
     toggleDarkTheme() {
      this.theme = this.theme === 'myCustomLightTheme' ? 'myDarkTheme' : 'myCustomLightTheme'
