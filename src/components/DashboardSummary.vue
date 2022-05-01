@@ -1,155 +1,180 @@
 <template>
-<!-- NEW network info vue -->
-  <v-col  xs="12" sm="12" md="12" lg="12" xl="12">
-    <v-card color="secondary" variant="contained" class="rounded-lg" :loading="networksLoad">
-      <v-card-title>
-        <div class="text-h6">Summary</div>
-        <div class="vcard_title_div d-flex justify-end">
-        </div>
-      </v-card-title>
-      <v-card-text class="mt-3 mb-3">
-        <div class="d-flex justify-space-between">
-          <div class="cardtext_row cardtext_row_title text-body-1">Available</div>
-          <div class="vcard_dot"></div>
-          <div class="text-body-2">{{liquid(selected)}}</div>
-        </div>
-        <div class="d-flex justify-space-between">
-          <div class="cardtext_row cardtext_row_title text-body-1">Staked</div>
-          <div class="vcard_dot"></div>
-          <div class="text-body-2">{{staked(selected)}}</div>
-        </div>
-        <div class="d-flex justify-space-between">
-          <div class="cardtext_row cardtext_row_title text-body-1">Rewards</div>
-          <div class="vcard_dot"></div>
-          <div class="cardtext_row cardtext_row_var text-body-2">{{ rewards(selected) }}</div>
-        </div>
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-actions class="vcard_action d-flex justify-space-evenly">
-        <!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
-        <div class="text-h6">🥩 🍟</div>
-        <v-divider vertical></v-divider>
-        <div class="vcard_action_btn_left font-weight-bold">{{total(selected)}}</div>
-      </v-card-actions>
-    </v-card>
-  </v-col>
+	<!-- NEW network info vue -->
+	<v-col xs="12" sm="12" md="12" lg="12" xl="12">
+		<v-card
+			color="secondary"
+			variant="contained"
+			class="rounded-lg"
+			:loading="networksLoad">
+			<v-card-title>
+				<div class="text-h6">Summary</div>
+				<div class="vcard_title_div d-flex justify-end"></div>
+			</v-card-title>
+			<v-card-text class="mt-3 mb-3">
+				<div class="d-flex justify-space-between">
+					<div class="cardtext_row cardtext_row_title text-body-1">
+						Available
+					</div>
+					<div class="vcard_dot"></div>
+					<div class="text-body-2">{{ liquid(selected) }}</div>
+				</div>
+				<div class="d-flex justify-space-between">
+					<div class="cardtext_row cardtext_row_title text-body-1">Staked</div>
+					<div class="vcard_dot"></div>
+					<div class="text-body-2">{{ staked(selected) }}</div>
+				</div>
+				<div class="d-flex justify-space-between">
+					<div class="cardtext_row cardtext_row_title text-body-1">Rewards</div>
+					<div class="vcard_dot"></div>
+					<div class="cardtext_row cardtext_row_var text-body-2">
+						{{ rewards(selected) }}
+					</div>
+				</div>
+				<div class="d-flex justify-space-between">
+					<div class="cardtext_row cardtext_row_title text-body-1">
+						LP Positions
+					</div>
+					<div class="vcard_dot"></div>
+					<div class="cardtext_row cardtext_row_var text-body-2">
+						{{ bonded(selected) }}
+					</div>
+				</div>
+				<div class="d-flex justify-space-between">
+					<div class="cardtext_row cardtext_row_title text-body-1">
+						Travelling with IBC
+					</div>
+					<div class="vcard_dot"></div>
+					<div class="cardtext_row cardtext_row_var text-body-2">
+						{{ foreign(selected) }}
+					</div>
+				</div>
+			</v-card-text>
+			<v-divider></v-divider>
+			<v-card-actions class="vcard_action d-flex justify-space-evenly">
+				<!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
+				<div class="text-h6">🥩 🍟</div>
+				<v-divider vertical></v-divider>
+				<div class="vcard_action_btn_left font-weight-bold">
+					{{ total(selected) }}
+				</div>
+			</v-card-actions>
+		</v-card>
+	</v-col>
 </template>
 
 <script>
-import _ from "lodash"
+import _ from "lodash";
 import { mapGetters } from "vuex";
 export default {
-  name: "DashboardSummary",
-  props: {
-    network: {
-      type: Object,
-      required: true,
-    },
-    selected: {
-      type: String
-    }
-  },
-  data: () => ({ 
-    selected: "All" ,
-    }),
-  async created() {
-    
-  },
-  methods: {
-    total (filter) {
-      console.log(filter,this.totalValue, _.keyBy(this.totalValue.wallets, "name") )
-      if (filter === "All") {
-        return  this.value(this.totalValue.total)
-      } else {
-        return this.value(_.keyBy(this.totalValue.wallets, "name")[filter].value)
-      }
-    },
-    staked(filter) {
-      if (filter === "All") {
-        return this.value(this.totalValue.staked)
-      } else {
-        const wallets = _.keyBy(this.totalValue.wallets, "name")
-        return this.value(wallets[filter].staked)
-      }
-    },
-    liquid(filter) {
-      if (filter === "All") {
-        return this.value(this.totalValue.liquid)
-      } else {
-        const wallets = _.keyBy(this.totalValue.wallets, "name");
-        return this.value(wallets[filter].liquid)
-      }
-    },
-    rewards(filter) {
-      if (filter === "All") {
-        return this.value(this.totalValue.rewards)
-      } else {
-        const wallets = _.keyBy(this.totalValue.wallets, "name");
-        return this.value(wallets[filter].rewards)
-      }
-    },
-    value(amount) {
-          let locale = "en-US";
-          if (this.currency.value === "cad") {
-            locale = "fr-CA";
-          } else if (this.currency.value === "eur") {
-            locale = "fr-FR";
-          }
-          let intl = new Intl.NumberFormat(locale, {
-            style: "currency",
-            currency: this.currency.value,
-            minimumFractionDigits: 2,
-          });
-      return intl.format(amount);
-    }
-
-  },
-  computed: {
-    ...mapGetters({
-      networksLoaded: "getIsNetworksLoaded",
-      pricesLoaded: "getIsPricesLoaded",
-      balancesLoaded: "getIsBalancesLoaded",
-      balances: "getBalancesByName",
-      price: "getPriceByCurrencyByName",
-      image: "getImageByName",
-      currency: "getCurrency",
-      totalValue: "getTotalValue",
-    }),
-  }
+	name: "DashboardSummary",
+	props: {
+		network: {
+			type: Object,
+			required: true,
+		},
+		selected: {
+			type: String,
+		},
+	},
+	data: () => ({
+		selected: "All",
+	}),
+	async created() {},
+	methods: {
+		total(filter) {
+			if (filter === "All") {
+				return this.value(this.totalValue.total);
+			} else {
+				return this.value(
+					_.keyBy(this.totalValue.wallets, "name")[filter].total
+				);
+			}
+		},
+		staked(filter) {
+			if (filter === "All") {
+				return this.value(this.totalValue.staked);
+			} else {
+				const wallets = _.keyBy(this.totalValue.wallets, "name");
+				return this.value(wallets[filter].staked);
+			}
+		},
+		bonded(filter) {
+			if (filter === "All") {
+				return this.value(this.totalValue.bonded);
+			} else {
+				const wallets = _.keyBy(this.totalValue.wallets, "name");
+				return this.value(wallets[filter].bonded);
+			}
+		},
+		foreign(filter) {
+			if (filter === "All") {
+				return this.value(this.totalValue.foreign);
+			} else {
+				const wallets = _.keyBy(this.totalValue.wallets, "name");
+				return this.value(wallets[filter].foreign);
+			}
+		},
+		liquid(filter) {
+			if (filter === "All") {
+				return this.value(this.totalValue.liquid);
+			} else {
+				const wallets = _.keyBy(this.totalValue.wallets, "name");
+				return this.value(wallets[filter].liquid);
+			}
+		},
+		rewards(filter) {
+			if (filter === "All") {
+				return this.value(this.totalValue.rewards);
+			} else {
+				const wallets = _.keyBy(this.totalValue.wallets, "name");
+				return this.value(wallets[filter].rewards);
+			}
+		},
+		value(amount) {
+			let locale = "en-US";
+			if (this.currency.value === "cad") {
+				locale = "fr-CA";
+			} else if (this.currency.value === "eur") {
+				locale = "fr-FR";
+			}
+			let intl = new Intl.NumberFormat(locale, {
+				style: "currency",
+				currency: this.currency.value,
+				minimumFractionDigits: 2,
+			});
+			return intl.format(amount);
+		},
+	},
+	computed: {
+		...mapGetters({
+			networksLoaded: "getIsNetworksLoaded",
+			pricesLoaded: "getIsPricesLoaded",
+			balancesLoaded: "getIsBalancesLoaded",
+			balances: "getBalancesByName",
+			price: "getPriceByCurrencyByName",
+			image: "getImageByName",
+			currency: "getCurrency",
+			totalValue: "getTotalValue",
+		}),
+	},
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .vcard_title_div {
-  width: 100%;
+	width: 100%;
 }
 .vchip_card_selected {
-  border: 1px solid;
-  font-weight: bold;
+	border: 1px solid;
+	font-weight: bold;
 }
 .vcard_dot {
-  border-bottom: thin dotted black;
-  width: 50%;
-  height: 16px
-}
-/*.vcard_action:hover {
-  background-color: #fff;
-  color: rgb(242,109,120);
-}
-.vcard_action_btn {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-}
-.vcard_action_btn:hover {
-  background-color: #fff;
-  color: rgb(242,109,120);
-} */
-.cardtext_row {
-  
+	border-bottom: thin dotted black;
+	width: 50%;
+	height: 16px;
 }
 .vcard_action_icon {
-  color: #00000099;
+	color: #00000099;
 }
 </style>
