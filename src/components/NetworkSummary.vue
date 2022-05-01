@@ -88,7 +88,9 @@
 			<v-expansion-panels class="mt-5">
 				<v-expansion-panel elevation="0">
 					<v-expansion-panel-title
-						>LP Tokens ({{ bondedArray.length }})</v-expansion-panel-title
+						>LP Tokens ({{
+							bondedArray ? bondedArray.length : 0
+						}})</v-expansion-panel-title
 					>
 					<v-expansion-panel-text>
 						<v-list density="compact">
@@ -118,7 +120,9 @@
 			<v-expansion-panels>
 				<v-expansion-panel elevation="0">
 					<v-expansion-panel-title
-						>Foreign Tokens ({{ foreignArray.length }})</v-expansion-panel-title
+						>Foreign Tokens ({{
+							foreignArray ? foreignArray.length : 0
+						}})</v-expansion-panel-title
 					>
 					<v-expansion-panel-text>
 						<v-list density="compact">
