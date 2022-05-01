@@ -5,8 +5,7 @@
 			color="secondary"
 			variant="contained"
 			class="rounded-lg"
-			:loading="networksLoad"
-		>
+			:loading="networksLoad">
 			<v-card-title>
 				<div class="text-h6">Summary</div>
 				<div class="vcard_title_div d-flex justify-end"></div>

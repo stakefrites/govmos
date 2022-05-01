@@ -13,8 +13,7 @@
 			v-if="statusRaw == 2"
 			class="mr-3"
 			color="primary"
-			variant="outlined"
-		>
+			variant="outlined">
 			Vote
 			<v-dialog v-model="dialog" activator="parent">
 				<v-card>
@@ -33,8 +32,7 @@
 							@click="castVote()"
 							variant="contained-text"
 							color="primary"
-							size="large"
-						>
+							size="large">
 							Vote
 						</v-btn>
 						<v-btn @click="closeDialog()"> Close Dialog </v-btn>

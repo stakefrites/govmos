@@ -120,8 +120,7 @@
 			:wallet="selected"
 			v-for="network in selectedNetworks"
 			:key="network.name"
-			:network="network"
-		></NetworkSummary>
+			:network="network"></NetworkSummary>
 	</v-row>
 </template>
 

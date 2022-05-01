@@ -1,13 +1,13 @@
 <template>
-  <div>Vote</div>
+	<div>Vote</div>
 </template>
 
 <script>
 export default {
-  name: "Vote",
-  data: () => ({}),
-  methods: {},
-  computed: {},
+	name: "Vote",
+	data: () => ({}),
+	methods: {},
+	computed: {},
 };
 </script>
 

@@ -5,13 +5,11 @@
 			dark
 			variant="outlined"
 			class="rounded-lg"
-			:loading="networksLoaded"
-		>
+			:loading="networksLoaded">
 			<v-overlay
 				:model-value="!balancesLoaded"
 				contained
-				class="align-center justify-center"
-			>
+				class="align-center justify-center">
 				<v-card dark class="pa-4">
 					<v-card-title>
 						<strong>Loading balances 🥩</strong>
@@ -38,8 +36,7 @@
 						<v-progress-circular
 							size="small"
 							width="3"
-							indeterminate
-						></v-progress-circular>
+							indeterminate></v-progress-circular>
 					</div>
 					<div class="card_title_chips_div">
 						<v-chip-group v-model="selected" mandatory>
@@ -84,8 +81,7 @@
 				</div>
 				<div
 					v-if="network.name === 'osmosis'"
-					class="d-flex justify-space-between"
-				>
+					class="d-flex justify-space-between">
 					<div class="cardtext_row cardtext_row_title text-body-2">
 						Bonded Equivalent
 					</div>
@@ -99,8 +95,7 @@
 				<v-list density="compact">
 					<v-list-item
 						v-for="token in foreignTokens(network.name)"
-						:key="token"
-					>
+						:key="token">
 						<v-avatar class="mr-3">
 							{{ token[token.denom] }}
 							<v-img class="avatar" :src="tokens[token.denom].image"></v-img>

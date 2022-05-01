@@ -1,7 +1,6 @@
 import _ from "lodash";
 import Backend from "../utils/Backend";
-const BACKEND_URL =
-	process.env.BACKEND_URL || "https://coin-gecko-cache.herokuapp.com";
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5001"; //"https://coin-gecko-cache.herokuapp.com";
 const { getAllBalances, getChains, getTokens, getAllPrices, getApr } =
 	new Backend(BACKEND_URL);
 
