@@ -128,7 +128,7 @@
 import { mapActions, mapGetters } from "vuex";
 import moment from "moment";
 import NetworkSummary from "@/components/NetworkSummary.vue";
-import PieChart from "@/components/BarChart.vue";
+import PieChart from "@/components/charts/BarChart.vue";
 import AmountsCard from "@/components/AmountsCard.vue";
 import DashboardSummary from "@/components/DashboardSummary.vue";
 import _ from "lodash";
