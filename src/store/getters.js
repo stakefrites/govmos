@@ -131,6 +131,7 @@ export default {
 			bonded: 0,
 			foreign: 0,
 			foreignArray: [],
+			bondedArray: [],
 		};
 		for (let wallet of state.portfolio.wallets) {
 			const networkBalance = wallet.balances.networks[name];
@@ -175,6 +176,13 @@ export default {
 						};
 					});
 				}
+
+				if (networkBalance.bonded) {
+					balances.bondedArray = [
+						...balances.bondedArray,
+						...networkBalance.bonded,
+					];
+				}
 				const total =
 					rewards + parseFloat(liquid) + parseFloat(staked) + bonded;
 				balances.total += total;
@@ -215,7 +223,6 @@ export default {
 			}
 			let foreign = [];
 			if (thisWallet.foreign) {
-				console.log(thisWallet.foreign);
 				foreign = thisWallet.foreign.map((f) => {
 					const decimals = state.tokens[f.denom].decimals;
 					return {
@@ -233,6 +240,7 @@ export default {
 				staked,
 				bonded,
 				foreign,
+				bondedArray: thisWallet.bonded,
 				total,
 			};
 			return formatted;

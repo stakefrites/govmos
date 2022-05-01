@@ -1,11 +1,7 @@
 <template>
 	<!-- NEW network info vue -->
 	<v-col xs="12" sm="6" md="6" lg="4" xl="4">
-		<v-card
-			dark
-			variant="outlined"
-			class="rounded-lg"
-			:loading="networksLoaded">
+		<v-card dark variant="outlined" :loading="networksLoaded">
 			<v-overlay
 				:model-value="!balancesLoaded"
 				contained
@@ -59,7 +55,7 @@
 				</div>
 			</v-card-title>
 			<v-divider></v-divider>
-			<v-card-text class="mt-3 mb-3">
+			<v-card-text class="mt-3 mb-3 card-body">
 				<div class="d-flex justify-space-between">
 					<div class="cardtext_row cardtext_row_title text-body-2">
 						Available
@@ -82,37 +78,73 @@
 				<div
 					v-if="network.name === 'osmosis'"
 					class="d-flex justify-space-between">
-					<div class="cardtext_row cardtext_row_title text-body-2">
-						Bonded Equivalent
-					</div>
+					<div class="cardtext_row cardtext_row_title text-body-2">Bonded</div>
 					<div class="vcard_dot"></div>
 					<div class="cardtext_row cardtext_row_var text-body-2">
 						{{ show(bonded) }}
 					</div>
 				</div>
 			</v-card-text>
-			<v-card-text v-if="foreignArray.length > 0">
-				<v-list density="compact">
-					<v-list-subheader>Foreign tokens</v-list-subheader>
-					<v-list-item v-for="token in foreignArray" :key="token.name">
-						<v-avatar class="mr-3">
-							<v-img class="avatar" :src="tokenImage(token.denom)"></v-img>
-						</v-avatar>
-						<v-list-item-title>
-							<div class="mr-1">
-								{{
+			<v-expansion-panels class="mt-5">
+				<v-expansion-panel elevation="0">
+					<v-expansion-panel-title
+						>LP Tokens ({{ bondedArray.length }})</v-expansion-panel-title
+					>
+					<v-expansion-panel-text>
+						<v-list density="compact">
+							<v-list-item v-for="token in bondedArray" :key="token.name">
+								<v-avatar size="small" color="primary" class="pa-2 mr-3">
+									<div class="text-body-2">
+										{{ token.denom.split("/")[2] }}
+									</div>
+								</v-avatar>
+								<v-list-item-title>
+									<div class="mr-1">
+										{{
+											selected === "denom"
+												? parseFloat(token.amount).toFixed(2)
+												: parseFloat(token.price * token.amount).toFixed(2)
+										}}
+									</div>
+								</v-list-item-title>
+								<v-list-item-subtitle>{{
+									selected === "denom" ? token.symbol : currency.text
+								}}</v-list-item-subtitle>
+							</v-list-item>
+						</v-list>
+					</v-expansion-panel-text>
+				</v-expansion-panel>
+			</v-expansion-panels>
+			<v-expansion-panels>
+				<v-expansion-panel elevation="0">
+					<v-expansion-panel-title
+						>Foreign Tokens ({{ foreignArray.length }})</v-expansion-panel-title
+					>
+					<v-expansion-panel-text>
+						<v-list density="compact">
+							<v-list-item v-for="token in foreignArray" :key="token.name">
+								<v-avatar class="mr-3">
+									<v-img class="avatar" :src="tokenImage(token.denom)"></v-img>
+								</v-avatar>
+								<v-list-item-title>
+									<div class="mr-1">
+										{{
+											selected === "denom"
+												? parseCoin(token)
+												: value(parseCoin(token) * price(token.denom))
+										}}
+									</div>
+								</v-list-item-title>
+								<v-list-item-subtitle>{{
 									selected === "denom"
-										? parseCoin(token)
-										: value(parseCoin(token) * price(token.denom))
-								}}
-							</div>
-						</v-list-item-title>
-						<v-list-item-subtitle>{{
-							selected === "denom" ? tokens[token.denom].symbol : currency.text
-						}}</v-list-item-subtitle>
-					</v-list-item>
-				</v-list>
-			</v-card-text>
+										? tokens[token.denom].symbol
+										: currency.text
+								}}</v-list-item-subtitle>
+							</v-list-item>
+						</v-list>
+					</v-expansion-panel-text>
+				</v-expansion-panel>
+			</v-expansion-panels>
 			<v-divider></v-divider>
 			<v-card-actions class="vcard_action d-flex justify-space-evenly">
 				<div class="text-body-1">
@@ -247,6 +279,17 @@ export default {
 					  }).liquid;
 			return balance;
 		},
+		bondedArray() {
+			const balance =
+				this.wallet === "All"
+					? this.balances(this.network.name).bondedArray
+					: this.amount({
+							walletName: this.wallet,
+							denom: this.network.name,
+					  }).bondedArray;
+
+			return balance;
+		},
 		foreignArray() {
 			const balance =
 				this.wallet === "All"
@@ -289,7 +332,7 @@ export default {
 }
 .vcard_dot {
 	border-bottom: thin dotted gray;
-	width: 34%;
+	width: 25%;
 	height: 16px;
 }
 
@@ -301,6 +344,10 @@ export default {
 	font-size: 10px !important;
 	color: #9e9e9e;
 	margin-left: -3px;
+}
+
+.card-body {
+	height: 90px;
 }
 /*.vcard_action:hover {
   background-color: #fff;
