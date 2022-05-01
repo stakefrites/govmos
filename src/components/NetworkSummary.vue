@@ -91,14 +91,12 @@
 					</div>
 				</div>
 			</v-card-text>
-			<v-card-text>
+			<v-card-text v-if="foreignArray.length > 0">
 				<v-list density="compact">
-					<v-list-item
-						v-for="token in foreignTokens(network.name)"
-						:key="token">
+					<v-list-subheader>Foreign tokens</v-list-subheader>
+					<v-list-item v-for="token in foreignArray" :key="token.name">
 						<v-avatar class="mr-3">
-							{{ token[token.denom] }}
-							<v-img class="avatar" :src="tokens[token.denom].image"></v-img>
+							<v-img class="avatar" :src="tokenImage(token.denom)"></v-img>
 						</v-avatar>
 						<v-list-item-title>
 							<div class="mr-1">
@@ -117,7 +115,6 @@
 			</v-card-text>
 			<v-divider></v-divider>
 			<v-card-actions class="vcard_action d-flex justify-space-evenly">
-				<!-- <v-btn class="vcard_action_btn_right">🥩 🍟 <v-icon class="vcard_action_icon ml-1" icon="mdi-information-outline"></v-icon></v-btn> -->
 				<div class="text-body-1">
 					<div v-if="pricesLoaded" class="text-body-1">
 						{{ parseFloat(price(network.denom)).toFixed(5) }}
@@ -147,8 +144,13 @@ export default {
 			type: String,
 		},
 	},
-	data: () => ({ apy: 0, selected: "denom", stakedVal: 0, liquidVal: 0 }),
-	async created() {},
+	data: () => ({
+		apy: 0,
+		selected: "denom",
+		stakedVal: 0,
+		liquidVal: 0,
+	}),
+	created() {},
 	methods: {
 		...mapActions({}),
 		parseDecimals(coin, decimals, precision) {
@@ -183,6 +185,9 @@ export default {
 				minimumFractionDigits: 2,
 			});
 			return intl.format(amount);
+		},
+		tokenImage(denom) {
+			return this.tokens[denom].image;
 		},
 	},
 	computed: {
@@ -242,6 +247,17 @@ export default {
 					  }).liquid;
 			return balance;
 		},
+		foreignArray() {
+			const balance =
+				this.wallet === "All"
+					? this.balances(this.network.name).foreignArray
+					: this.amount({
+							walletName: this.wallet,
+							denom: this.network.name,
+					  }).foreign;
+
+			return balance;
+		},
 
 		total() {
 			const balance =
@@ -252,17 +268,6 @@ export default {
 							denom: this.network.name,
 					  }).total;
 
-			return balance;
-		},
-
-		foreign() {
-			const balance =
-				this.wallet === "All"
-					? this.balances(this.network.name).foreign
-					: this.amount({
-							walletName: this.wallet,
-							denom: this.network.name,
-					  }).foreign;
 			return balance;
 		},
 	},
